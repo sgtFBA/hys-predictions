@@ -505,7 +505,7 @@
     "premier_league": [],
     "championship": []
   },
-  "last_checked": "2026-08-14T14:25:36Z",
+  "last_checked": "2026-08-14T22:16:37Z",
   "notes": [
     "premier_league and championship team lists above are placeholders for the note that team names in current_tables/predictions must match exactly (case-sensitive) the names in leagues.*.teams.",
     "current_tables entries are ordered lists of team names, position = index + 1. Empty array = season not yet started / no data fetched yet.",
