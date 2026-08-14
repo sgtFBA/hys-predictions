@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HYS League Predictions 2026/27</title>
+<style>
+  /* Theme variables live on :root (the <html> element), NOT on .viz-root — a
+     custom property declared on a div only cascades to that div's own
+     descendants, so body (an ANCESTOR of .viz-root) would never see it and
+     would fall back to browser defaults (black text, transparent/white bg).
+     That was the bug: panels went dark correctly, but the page canvas behind
+     them stayed white because body's background/color never resolved. */
+  :root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page-plane:     #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --muted:          #898781;
+    --gridline:       #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --series-1:       #2a78d6;
+    --good:           #006300;
+    --good-bg:        #e0f5e0;
+    --critical:       #b42318;
+    --critical-bg:    #fbe6e4;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --surface-1:      #1a1a19;
+    --page-plane:     #0d0d0d;
+    --text-primary:   #ffffff;
+    --text-secondary: #c3c2b7;
+    --muted:          #898781;
+    --gridline:       #2c2c2a;
+    --baseline:       #383835;
+    --border:         rgba(255,255,255,0.10);
+    --series-1:       #3987e5;
+    --good:           #3ecf3e;
+    --good-bg:        #12301a;
+    --critical:       #e66767;
+    --critical-bg:    #3a1414;
+  }
+  /* ITFC mode — Ipswich Town's royal blue & white, for the one true club colour */
+  :root[data-theme="itfc"] {
+    color-scheme: dark;
+    --surface-1:      #0d2b6b;
+    --page-plane:     #071b47;
+    --text-primary:   #ffffff;
+    --text-secondary: #cddcf7;
+    --muted:          #93a5d1;
+    --gridline:       #1e3f8f;
+    --baseline:       #3a5bb0;
+    --border:         rgba(255,255,255,0.16);
+    --series-1:       #ffffff;
+    --good:           #7be87b;
+    --good-bg:        #123a1e;
+    --critical:       #ff9b90;
+    --critical-bg:    #4a1512;
+    --itfc-red:       #e30613;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--page-plane);
+    color: var(--text-primary);
+  }
+  .viz-root { padding: 24px 16px 48px; max-width: 1700px; margin: 0 auto; }
+  header { margin-bottom: 24px; }
+  header h1 { margin: 0 0 4px; font-size: 1.5rem; }
+  header .sub { color: var(--text-secondary); font-size: 0.95rem; }
+  .meta-row {
+    display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 12px;
+    font-size: 0.85rem; color: var(--text-secondary);
+  }
+  .rule {
+    margin-top: 12px; padding: 12px 14px; background: var(--surface-1);
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 760px) { .grid-2 { grid-template-columns: 1fr; } }
+  .panel {
+    background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px; margin-bottom: 20px;
+  }
+  /* ITFC mode's third colour — a red stripe and underline, not just blue/white */
+  :root[data-theme="itfc"] .panel { border-left: 4px solid var(--itfc-red); }
+  :root[data-theme="itfc"] .panel-head h2 {
+    display: inline-block; padding-bottom: 3px; border-bottom: 3px solid var(--itfc-red);
+  }
+  :root[data-theme="itfc"] header h1 {
+    display: inline-block; padding-bottom: 4px; border-bottom: 4px solid var(--itfc-red);
+  }
+  :root[data-theme="itfc"] .theme-toggle { border-color: var(--itfc-red); }
+  .panel-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px; gap: 8px; flex-wrap: wrap;
+  }
+  .panel-head h2 { margin: 0; font-size: 1.05rem; }
+  .badge {
+    font-size: 0.74rem; font-weight: 600; padding: 4px 10px; border-radius: 999px;
+    border: 1px solid var(--border); color: var(--text-secondary);
+    background: var(--page-plane);
+    white-space: nowrap;
+  }
+  .badge-live { color: var(--good); background: var(--good-bg); border-color: transparent; }
+  .badge-muted { color: var(--text-secondary); background: var(--page-plane); }
+  .table-scroll { max-height: 520px; overflow-y: auto; }
+  table.league-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  table.league-table.small { font-size: 0.8rem; }
+  table.league-table th {
+    text-align: left; font-size: 0.75rem; color: var(--text-secondary);
+    border-bottom: 1px solid var(--gridline); padding: 6px 8px;
+    position: sticky; top: 0; background: var(--surface-1);
+  }
+  table.league-table td {
+    padding: 6px 8px; border-bottom: 1px solid var(--gridline);
+    font-variant-numeric: tabular-nums;
+  }
+  table.league-table td.pos { color: var(--text-secondary); width: 2.2em; }
+  table.league-table tr:last-child td { border-bottom: none; }
+  table.scores-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  table.scores-table th {
+    text-align: left; font-size: 0.75rem; color: var(--text-secondary);
+    border-bottom: 1px solid var(--gridline); padding: 6px 8px;
+  }
+  table.scores-table td { padding: 6px 8px; border-bottom: 1px solid var(--gridline); }
+  table.scores-table tr:last-child td { border-bottom: none; }
+  table.scores-table .scores-rank { color: var(--text-secondary); width: 2.2em; font-variant-numeric: tabular-nums; }
+  table.scores-table .scores-num { font-variant-numeric: tabular-nums; }
+  table.scores-table .scores-total { font-weight: 700; }
+  table.scores-table .scores-row-leader { background: var(--good-bg); }
+  table.scores-table .scores-row-leader td { color: var(--good); font-weight: 700; }
+  .empty-state { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; margin: 4px 0; }
+  .leaderboard { display: flex; flex-direction: column; gap: 10px; }
+  .lb-row {
+    display: grid;
+    grid-template-columns: 28px 1fr 2fr auto;
+    grid-template-areas: "rank name bar total" ". . split split";
+    align-items: center; gap: 4px 10px;
+  }
+  .lb-rank { grid-area: rank; color: var(--text-secondary); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+  .lb-name { grid-area: name; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; }
+  .lb-bar-wrap { grid-area: bar; background: var(--gridline); border-radius: 4px; height: 10px; overflow: hidden; }
+  .lb-bar { background: var(--series-1); height: 100%; border-radius: 4px; }
+  .lb-total { grid-area: total; font-size: 0.9rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .lb-split { grid-area: split; font-size: 0.75rem; color: var(--text-secondary); }
+  .tag { font-size: 0.68rem; padding: 2px 6px; border-radius: 999px; }
+  .tag-good { color: var(--good); background: var(--good-bg); }
+  .tag-critical { color: var(--critical); background: var(--critical-bg); }
+  footer { margin-top: 24px; font-size: 0.78rem; color: var(--text-secondary); text-align: center; }
+  .grid-scroll { overflow-x: auto; }
+  table.pred-grid-table {
+    border-collapse: collapse; font-size: 0.78rem; white-space: nowrap;
+  }
+  table.pred-grid-table th, table.pred-grid-table td {
+    padding: 4px 8px; text-align: left; border: 1px solid var(--gridline);
+  }
+  table.pred-grid-table thead th {
+    font-size: 0.72rem; color: var(--text-secondary); font-weight: 600;
+    border-bottom: 2px solid var(--gridline); white-space: nowrap;
+    position: sticky; top: 0; background: var(--surface-1);
+  }
+  .grid-pos-head { position: sticky; left: 0; z-index: 2; background: var(--surface-1); }
+  .grid-actual-head { color: var(--text-primary) !important; }
+  .grid-pos {
+    position: sticky; left: 0; background: var(--surface-1);
+    color: var(--text-secondary); font-variant-numeric: tabular-nums;
+    text-align: center; border-right: 2px solid var(--gridline);
+  }
+  .grid-cell { font-weight: 600; }
+  .grid-cell-empty { background: var(--page-plane); color: var(--text-secondary); font-weight: 400; text-align: center; }
+  .grid-score-chip {
+    font-size: 0.68rem; font-weight: 700; color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+  }
+  .grid-total-row td { border-top: 2px solid var(--gridline); font-weight: 700; }
+  .grid-total-label { text-align: right; color: var(--text-secondary); font-weight: 600; }
+  .grid-total { text-align: center; font-variant-numeric: tabular-nums; }
+  .header-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .theme-toggle {
+    flex: 0 0 auto; font-size: 0.78rem; font-weight: 600; padding: 6px 12px;
+    border-radius: 999px; border: 1px solid var(--border); background: var(--surface-1);
+    color: var(--text-primary); cursor: pointer; white-space: nowrap;
+  }
+  .theme-toggle:hover { background: var(--page-plane); }
+</style>
+</head>
+<body>
+<div class="viz-root">
+  <header>
+    <div class="header-row">
+      <h1>HYS League Predictions 2026/27</h1>
+      <button class="theme-toggle" id="themeToggle" type="button" onclick="toggleTheme()">Dark mode</button>
+      <!-- cycles Light → Dark → ITFC → Light; label always shows the mode you're about to switch TO -->
+    </div>
+    <div class="sub">Predict the final Premier League and Championship tables. Score = total distance between predicted and actual finishing position, summed across every team. Lowest combined score wins the group; highest loses.</div>
+    <div class="meta-row">
+      <span>Season 2026-27</span>
+      <span>Results last checked: Fri 14 Aug 2026, 14:25 UTC</span>
+      <span>Dashboard generated: Fri 14 Aug 2026, 21:56 UTC</span>
+    </div>
+  </header>
+
+  
+    <div class="grid-2">
+      <div></div>
+      <div>
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Championship Scores</h2>
+        <span class="badge badge-muted">Lowest total wins</span>
+      </div>
+      <div class="table-scroll">
+        <table class="scores-table">
+          <thead><tr><th>#</th><th>Name</th><th>Score</th></tr></thead>
+          <tbody><tr class=""><td class="scores-rank">—</td><td class="scores-name">Aidan</td><td class="scores-num scores-total">—</td></tr><tr class=""><td class="scores-rank">—</td><td class="scores-name">Arch</td><td class="scores-num scores-total">—</td></tr><tr class=""><td class="scores-rank">—</td><td class="scores-name">Barney</td><td class="scores-num scores-total">—</td></tr><tr class=""><td class="scores-rank">—</td><td class="scores-name">Ben</td><td class="scores-num scores-total">—</td></tr><tr class=""><td class="scores-rank">—</td><td class="scores-name">Dave</td><td class="scores-num scores-total">—</td></tr><tr class=""><td class="scores-rank">—</td><td class="scores-name">Dec</td><td class="scores-num scores-total">—</td></tr><tr class=""><td class="scores-rank">—</td><td class="scores-name">Gee</td><td class="scores-num scores-total">—</td></tr><tr class=""><td class="scores-rank">—</td><td class="scores-name">Hayd</td><td class="scores-num scores-total">—</td></tr><tr class=""><td class="scores-rank">—</td><td class="scores-name">Hoggy</td><td class="scores-num scores-total">—</td></tr><tr class=""><td class="scores-rank">—</td><td class="scores-name">Jack</td><td class="scores-num scores-total">—</td></tr><tr class=""><td class="scores-rank">—</td><td class="scores-name">Jase</td><td class="scores-num scores-total">—</td></tr><tr class=""><td class="scores-rank">—</td><td class="scores-name">Joe</td><td class="scores-num scores-total">—</td></tr><tr class=""><td class="scores-rank">—</td><td class="scores-name">Liam</td><td class="scores-num scores-total">—</td></tr><tr class=""><td class="scores-rank">—</td><td class="scores-name">Reiss</td><td class="scores-num scores-total">—</td></tr><tr class=""><td class="scores-rank">—</td><td class="scores-name">Tell</td><td class="scores-num scores-total">—</td></tr><tr class=""><td class="scores-rank">—</td><td class="scores-name">Tom Town</td><td class="scores-num scores-total">—</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+    </div>
+    </div>
+    
+
+  
+    <div class="grid-2">
+      <div>
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Premier League</h2>
+        <span class="badge badge-muted">Season not started — alphabetical listing</span>
+      </div>
+      <div class="table-scroll">
+        <table class="league-table">
+          <thead><tr><th>#</th><th>Team</th></tr></thead>
+          <tbody><tr><td class="pos">1</td><td>AFC Bournemouth</td></tr><tr><td class="pos">2</td><td>Arsenal</td></tr><tr><td class="pos">3</td><td>Aston Villa</td></tr><tr><td class="pos">4</td><td>Brentford</td></tr><tr><td class="pos">5</td><td>Brighton &amp; Hove Albion</td></tr><tr><td class="pos">6</td><td>Chelsea</td></tr><tr><td class="pos">7</td><td>Coventry City</td></tr><tr><td class="pos">8</td><td>Crystal Palace</td></tr><tr><td class="pos">9</td><td>Everton</td></tr><tr><td class="pos">10</td><td>Fulham</td></tr><tr><td class="pos">11</td><td>Hull City</td></tr><tr><td class="pos">12</td><td>Ipswich Town</td></tr><tr><td class="pos">13</td><td>Leeds United</td></tr><tr><td class="pos">14</td><td>Liverpool</td></tr><tr><td class="pos">15</td><td>Manchester City</td></tr><tr><td class="pos">16</td><td>Manchester United</td></tr><tr><td class="pos">17</td><td>Newcastle United</td></tr><tr><td class="pos">18</td><td>Nottingham Forest</td></tr><tr><td class="pos">19</td><td>Sunderland</td></tr><tr><td class="pos">20</td><td>Tottenham Hotspur</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+    </div>
+      <div>
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Championship</h2>
+        <span class="badge badge-muted">Season not started — alphabetical listing</span>
+      </div>
+      <div class="table-scroll">
+        <table class="league-table">
+          <thead><tr><th>#</th><th>Team</th></tr></thead>
+          <tbody><tr><td class="pos">1</td><td>Birmingham City</td></tr><tr><td class="pos">2</td><td>Blackburn Rovers</td></tr><tr><td class="pos">3</td><td>Bolton Wanderers</td></tr><tr><td class="pos">4</td><td>Bristol City</td></tr><tr><td class="pos">5</td><td>Burnley</td></tr><tr><td class="pos">6</td><td>Cardiff City</td></tr><tr><td class="pos">7</td><td>Charlton Athletic</td></tr><tr><td class="pos">8</td><td>Derby County</td></tr><tr><td class="pos">9</td><td>Lincoln City</td></tr><tr><td class="pos">10</td><td>Middlesbrough</td></tr><tr><td class="pos">11</td><td>Millwall</td></tr><tr><td class="pos">12</td><td>Norwich City</td></tr><tr><td class="pos">13</td><td>Portsmouth</td></tr><tr><td class="pos">14</td><td>Preston North End</td></tr><tr><td class="pos">15</td><td>Queens Park Rangers</td></tr><tr><td class="pos">16</td><td>Sheffield United</td></tr><tr><td class="pos">17</td><td>Southampton</td></tr><tr><td class="pos">18</td><td>Stoke City</td></tr><tr><td class="pos">19</td><td>Swansea City</td></tr><tr><td class="pos">20</td><td>Watford</td></tr><tr><td class="pos">21</td><td>West Bromwich Albion</td></tr><tr><td class="pos">22</td><td>West Ham United</td></tr><tr><td class="pos">23</td><td>Wolverhampton Wanderers</td></tr><tr><td class="pos">24</td><td>Wrexham AFC</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+    </div>
+    </div>
+    
+
+  
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Championship — Prediction Grid</h2>
+        <span class="badge badge-muted">Lowest total wins</span>
+      </div>
+      <div class="grid-scroll">
+        <table class="pred-grid-table">
+          <thead><tr><th class="grid-pos-head">#</th><th class="grid-actual-head">Actual</th><th>Aidan</th><th>Arch</th><th>Barney</th><th>Ben</th><th>Dave</th><th>Dec</th><th>Gee</th><th>Hayd</th><th>Hoggy</th><th>Jack</th><th>Jase</th><th>Joe</th><th>Liam</th><th>Reiss</th><th>Tell</th><th>Tom Town</th></tr></thead>
+          <tbody><tr><td class="grid-pos">1</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#7A263A;color:#1BB1E7">West Ham</td><td class="grid-cell" style="background:#7A263A;color:#1BB1E7">West Ham</td><td class="grid-cell" style="background:#7A263A;color:#1BB1E7">West Ham</td><td class="grid-cell" style="background:#7A263A;color:#1BB1E7">West Ham</td><td class="grid-cell" style="background:#7A263A;color:#1BB1E7">West Ham</td><td class="grid-cell" style="background:#7A263A;color:#1BB1E7">West Ham</td><td class="grid-cell" style="background:#7A263A;color:#1BB1E7">West Ham</td><td class="grid-cell" style="background:#FDB913;color:#000000">Wolves</td><td class="grid-cell" style="background:#7A263A;color:#1BB1E7">West Ham</td><td class="grid-cell" style="background:#7A263A;color:#1BB1E7">West Ham</td><td class="grid-cell" style="background:#7A263A;color:#1BB1E7">West Ham</td><td class="grid-cell" style="background:#7A263A;color:#1BB1E7">West Ham</td><td class="grid-cell" style="background:#7A263A;color:#1BB1E7">West Ham</td><td class="grid-cell" style="background:#7A263A;color:#1BB1E7">West Ham</td><td class="grid-cell" style="background:#7A263A;color:#1BB1E7">West Ham</td><td class="grid-cell" style="background:#7A263A;color:#1BB1E7">West Ham</td></tr><tr><td class="grid-pos">2</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#FDB913;color:#000000">Wolves</td><td class="grid-cell" style="background:#FDB913;color:#000000">Wolves</td><td class="grid-cell" style="background:#FDB913;color:#000000">Wolves</td><td class="grid-cell" style="background:#CC0000;color:#FFFFFF">Middlesbrough</td><td class="grid-cell" style="background:#FDB913;color:#000000">Wolves</td><td class="grid-cell" style="background:#CC0000;color:#FFFFFF">Middlesbrough</td><td class="grid-cell" style="background:#FDB913;color:#000000">Wolves</td><td class="grid-cell" style="background:#7A263A;color:#1BB1E7">West Ham</td><td class="grid-cell" style="background:#FDB913;color:#000000">Wolves</td><td class="grid-cell" style="background:#00285E;color:#FFFFFF">Millwall</td><td class="grid-cell" style="background:#FDB913;color:#000000">Wolves</td><td class="grid-cell" style="background:#FDB913;color:#000000">Wolves</td><td class="grid-cell" style="background:#6C1D45;color:#99D6EA">Burnley</td><td class="grid-cell" style="background:#D71920;color:#FFFFFF">Southampton</td><td class="grid-cell" style="background:#FDB913;color:#000000">Wolves</td><td class="grid-cell" style="background:#D71920;color:#FFFFFF">Southampton</td></tr><tr><td class="grid-pos">3</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#CC0000;color:#FFFFFF">Middlesbrough</td><td class="grid-cell" style="background:#D71920;color:#FFFFFF">Southampton</td><td class="grid-cell" style="background:#D71920;color:#FFFFFF">Southampton</td><td class="grid-cell" style="background:#FDB913;color:#000000">Wolves</td><td class="grid-cell" style="background:#D71920;color:#FFFFFF">Southampton</td><td class="grid-cell" style="background:#D71920;color:#FFFFFF">Southampton</td><td class="grid-cell" style="background:#CC0000;color:#FFFFFF">Middlesbrough</td><td class="grid-cell" style="background:#CC0000;color:#FFFFFF">Middlesbrough</td><td class="grid-cell" style="background:#CC0000;color:#FFFFFF">Middlesbrough</td><td class="grid-cell" style="background:#FDB913;color:#000000">Wolves</td><td class="grid-cell" style="background:#CC0000;color:#FFFFFF">Middlesbrough</td><td class="grid-cell" style="background:#D71920;color:#FFFFFF">Southampton</td><td class="grid-cell" style="background:#FDB913;color:#000000">Wolves</td><td class="grid-cell" style="background:#FDB913;color:#000000">Wolves</td><td class="grid-cell" style="background:#D71920;color:#FFFFFF">Southampton</td><td class="grid-cell" style="background:#CC0000;color:#FFFFFF">Middlesbrough</td></tr><tr><td class="grid-pos">4</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#FFF200;color:#00A650">Norwich</td><td class="grid-cell" style="background:#6C1D45;color:#99D6EA">Burnley</td><td class="grid-cell" style="background:#CC0000;color:#FFFFFF">Middlesbrough</td><td class="grid-cell" style="background:#D71920;color:#FFFFFF">Southampton</td><td class="grid-cell" style="background:#CC0000;color:#FFFFFF">Middlesbrough</td><td class="grid-cell" style="background:#00285E;color:#FFFFFF">Millwall</td><td class="grid-cell" style="background:#D71920;color:#FFFFFF">Southampton</td><td class="grid-cell" style="background:#00285E;color:#FFFFFF">Millwall</td><td class="grid-cell" style="background:#6C1D45;color:#99D6EA">Burnley</td><td class="grid-cell" style="background:#0044A3;color:#FFFFFF">Birmingham</td><td class="grid-cell" style="background:#00285E;color:#FFFFFF">Millwall</td><td class="grid-cell" style="background:#CC0000;color:#FFFFFF">Middlesbrough</td><td class="grid-cell" style="background:#CC0000;color:#FFFFFF">Middlesbrough</td><td class="grid-cell" style="background:#CC0000;color:#FFFFFF">Middlesbrough</td><td class="grid-cell" style="background:#6C1D45;color:#99D6EA">Burnley</td><td class="grid-cell" style="background:#FDB913;color:#000000">Wolves</td></tr><tr><td class="grid-pos">5</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#6C1D45;color:#99D6EA">Burnley</td><td class="grid-cell" style="background:#CC0000;color:#FFFFFF">Middlesbrough</td><td class="grid-cell" style="background:#FFF200;color:#00A650">Norwich</td><td class="grid-cell" style="background:#6C1D45;color:#99D6EA">Burnley</td><td class="grid-cell" style="background:#6C1D45;color:#99D6EA">Burnley</td><td class="grid-cell" style="background:#FDB913;color:#000000">Wolves</td><td class="grid-cell" style="background:#FFF200;color:#00A650">Norwich</td><td class="grid-cell" style="background:#D71920;color:#FFFFFF">Southampton</td><td class="grid-cell" style="background:#FFF200;color:#00A650">Norwich</td><td class="grid-cell" style="background:#6C1D45;color:#99D6EA">Burnley</td><td class="grid-cell" style="background:#6C1D45;color:#99D6EA">Burnley</td><td class="grid-cell" style="background:#6C1D45;color:#99D6EA">Burnley</td><td class="grid-cell" style="background:#D71920;color:#FFFFFF">Southampton</td><td class="grid-cell" style="background:#C8102E;color:#FFFFFF">Wrexham</td><td class="grid-cell" style="background:#CC0000;color:#FFFFFF">Middlesbrough</td><td class="grid-cell" style="background:#EE2737;color:#000000">Sheff Utd</td></tr><tr><td class="grid-pos">6</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#D71920;color:#FFFFFF">Southampton</td><td class="grid-cell" style="background:#C8102E;color:#FFFFFF">Wrexham</td><td class="grid-cell" style="background:#0044A3;color:#FFFFFF">Birmingham</td><td class="grid-cell" style="background:#00285E;color:#FFFFFF">Millwall</td><td class="grid-cell" style="background:#00285E;color:#FFFFFF">Millwall</td><td class="grid-cell" style="background:#FFF200;color:#00A650">Norwich</td><td class="grid-cell" style="background:#00285E;color:#FFFFFF">Millwall</td><td class="grid-cell" style="background:#6C1D45;color:#99D6EA">Burnley</td><td class="grid-cell" style="background:#D71920;color:#FFFFFF">Southampton</td><td class="grid-cell" style="background:#D71920;color:#FFFFFF">Southampton</td><td class="grid-cell" style="background:#D71920;color:#FFFFFF">Southampton</td><td class="grid-cell" style="background:#C8102E;color:#FFFFFF">Wrexham</td><td class="grid-cell" style="background:#FFF200;color:#00A650">Norwich</td><td class="grid-cell" style="background:#00285E;color:#FFFFFF">Millwall</td><td class="grid-cell" style="background:#FFF200;color:#00A650">Norwich</td><td class="grid-cell" style="background:#C8102E;color:#FFFFFF">Wrexham</td></tr><tr><td class="grid-pos">7</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#C8102E;color:#FFFFFF">Wrexham</td><td class="grid-cell" style="background:#00285E;color:#FFFFFF">Millwall</td><td class="grid-cell" style="background:#6C1D45;color:#99D6EA">Burnley</td><td class="grid-cell" style="background:#FFF200;color:#00A650">Norwich</td><td class="grid-cell" style="background:#FFF200;color:#00A650">Norwich</td><td class="grid-cell" style="background:#EE2737;color:#000000">Sheff Utd</td><td class="grid-cell" style="background:#6C1D45;color:#99D6EA">Burnley</td><td class="grid-cell" style="background:#0044A3;color:#FFFFFF">Birmingham</td><td class="grid-cell" style="background:#0044A3;color:#FFFFFF">Birmingham</td><td class="grid-cell" style="background:#122F67;color:#FFFFFF">WBA</td><td class="grid-cell" style="background:#C8102E;color:#FFFFFF">Wrexham</td><td class="grid-cell" style="background:#FFF200;color:#00A650">Norwich</td><td class="grid-cell" style="background:#00285E;color:#FFFFFF">Millwall</td><td class="grid-cell" style="background:#0044A3;color:#FFFFFF">Birmingham</td><td class="grid-cell" style="background:#00285E;color:#FFFFFF">Millwall</td><td class="grid-cell" style="background:#6C1D45;color:#99D6EA">Burnley</td></tr><tr><td class="grid-pos">8</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#1D5BA4;color:#FFFFFF">QPR</td><td class="grid-cell" style="background:#EE2737;color:#000000">Sheff Utd</td><td class="grid-cell" style="background:#EE2737;color:#000000">Sheff Utd</td><td class="grid-cell" style="background:#C8102E;color:#FFFFFF">Wrexham</td><td class="grid-cell" style="background:#0044A3;color:#FFFFFF">Birmingham</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Derby</td><td class="grid-cell" style="background:#C8102E;color:#FFFFFF">Wrexham</td><td class="grid-cell" style="background:#C8102E;color:#FFFFFF">Wrexham</td><td class="grid-cell" style="background:#1D5BA4;color:#FFFFFF">QPR</td><td class="grid-cell" style="background:#CC0000;color:#FFFFFF">Middlesbrough</td><td class="grid-cell" style="background:#0044A3;color:#FFFFFF">Birmingham</td><td class="grid-cell" style="background:#00285E;color:#FFFFFF">Millwall</td><td class="grid-cell" style="background:#001489;color:#FFFFFF">Portsmouth</td><td class="grid-cell" style="background:#FFF200;color:#00A650">Norwich</td><td class="grid-cell" style="background:#C8102E;color:#FFFFFF">Wrexham</td><td class="grid-cell" style="background:#00285E;color:#FFFFFF">Millwall</td></tr><tr><td class="grid-pos">9</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#0044A3;color:#FFFFFF">Birmingham</td><td class="grid-cell" style="background:#FFF200;color:#00A650">Norwich</td><td class="grid-cell" style="background:#00285E;color:#FFFFFF">Millwall</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Derby</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Derby</td><td class="grid-cell" style="background:#6C1D45;color:#99D6EA">Burnley</td><td class="grid-cell" style="background:#EE2737;color:#000000">Sheff Utd</td><td class="grid-cell" style="background:#EE2737;color:#000000">Sheff Utd</td><td class="grid-cell" style="background:#C8102E;color:#FFFFFF">Wrexham</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Derby</td><td class="grid-cell" style="background:#FFF200;color:#00A650">Norwich</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Swansea</td><td class="grid-cell" style="background:#C8102E;color:#FFFFFF">Wrexham</td><td class="grid-cell" style="background:#6C1D45;color:#99D6EA">Burnley</td><td class="grid-cell" style="background:#0044A3;color:#FFFFFF">Birmingham</td><td class="grid-cell" style="background:#FFF200;color:#00A650">Norwich</td></tr><tr><td class="grid-pos">10</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#122F67;color:#FFFFFF">WBA</td><td class="grid-cell" style="background:#122F67;color:#FFFFFF">WBA</td><td class="grid-cell" style="background:#C8102E;color:#FFFFFF">Wrexham</td><td class="grid-cell" style="background:#EE2737;color:#000000">Sheff Utd</td><td class="grid-cell" style="background:#C8102E;color:#FFFFFF">Wrexham</td><td class="grid-cell" style="background:#E21C21;color:#FFFFFF">Bristol City</td><td class="grid-cell" style="background:#0044A3;color:#FFFFFF">Birmingham</td><td class="grid-cell" style="background:#FFF200;color:#00A650">Norwich</td><td class="grid-cell" style="background:#122F67;color:#FFFFFF">WBA</td><td class="grid-cell" style="background:#C8102E;color:#FFFFFF">Wrexham</td><td class="grid-cell" style="background:#E03A3E;color:#FFFFFF">Stoke</td><td class="grid-cell" style="background:#E21C21;color:#FFFFFF">Bristol City</td><td class="grid-cell" style="background:#EE2737;color:#000000">Sheff Utd</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Derby</td><td class="grid-cell" style="background:#EE2737;color:#000000">Sheff Utd</td><td class="grid-cell" style="background:#0044A3;color:#FFFFFF">Birmingham</td></tr><tr><td class="grid-pos">11</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#00285E;color:#FFFFFF">Millwall</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Swansea</td><td class="grid-cell" style="background:#FBEE23;color:#000000">Watford</td><td class="grid-cell" style="background:#122F67;color:#FFFFFF">WBA</td><td class="grid-cell" style="background:#E03A3E;color:#FFFFFF">Stoke</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Swansea</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Derby</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Derby</td><td class="grid-cell" style="background:#00285E;color:#FFFFFF">Millwall</td><td class="grid-cell" style="background:#E03A3E;color:#FFFFFF">Stoke</td><td class="grid-cell" style="background:#EE2737;color:#000000">Sheff Utd</td><td class="grid-cell" style="background:#EE2737;color:#000000">Sheff Utd</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Derby</td><td class="grid-cell" style="background:#EE2737;color:#000000">Sheff Utd</td><td class="grid-cell" style="background:#122F67;color:#FFFFFF">WBA</td><td class="grid-cell" style="background:#122F67;color:#FFFFFF">WBA</td></tr><tr><td class="grid-pos">12</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Derby</td><td class="grid-cell" style="background:#E21C21;color:#FFFFFF">Bristol City</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Swansea</td><td class="grid-cell" style="background:#0044A3;color:#FFFFFF">Birmingham</td><td class="grid-cell" style="background:#EE2737;color:#000000">Sheff Utd</td><td class="grid-cell" style="background:#1D5BA4;color:#FFFFFF">QPR</td><td class="grid-cell" style="background:#E21C21;color:#FFFFFF">Bristol City</td><td class="grid-cell" style="background:#E21C21;color:#FFFFFF">Bristol City</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Derby</td><td class="grid-cell" style="background:#EE2737;color:#000000">Sheff Utd</td><td class="grid-cell" style="background:#E21C21;color:#FFFFFF">Bristol City</td><td class="grid-cell" style="background:#1D5BA4;color:#FFFFFF">QPR</td><td class="grid-cell" style="background:#1D5BA4;color:#FFFFFF">QPR</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Swansea</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Derby</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Derby</td></tr><tr><td class="grid-pos">13</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#EE2737;color:#000000">Sheff Utd</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Derby</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Derby</td><td class="grid-cell" style="background:#E03A3E;color:#FFFFFF">Stoke</td><td class="grid-cell" style="background:#122F67;color:#FFFFFF">WBA</td><td class="grid-cell" style="background:#C8102E;color:#FFFFFF">Wrexham</td><td class="grid-cell" style="background:#1D5BA4;color:#FFFFFF">QPR</td><td class="grid-cell" style="background:#E03A3E;color:#FFFFFF">Stoke</td><td class="grid-cell" style="background:#EE2737;color:#000000">Sheff Utd</td><td class="grid-cell" style="background:#FFF200;color:#00A650">Norwich</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Swansea</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Derby</td><td class="grid-cell" style="background:#122F67;color:#FFFFFF">WBA</td><td class="grid-cell" style="background:#122F67;color:#FFFFFF">WBA</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Swansea</td><td class="grid-cell" style="background:#1D5BA4;color:#FFFFFF">QPR</td></tr><tr><td class="grid-pos">14</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#E03A3E;color:#FFFFFF">Stoke</td><td class="grid-cell" style="background:#0044A3;color:#FFFFFF">Birmingham</td><td class="grid-cell" style="background:#E21C21;color:#FFFFFF">Bristol City</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Swansea</td><td class="grid-cell" style="background:#FBEE23;color:#000000">Watford</td><td class="grid-cell" style="background:#0044A3;color:#FFFFFF">Birmingham</td><td class="grid-cell" style="background:#122F67;color:#FFFFFF">WBA</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Swansea</td><td class="grid-cell" style="background:#E21C21;color:#FFFFFF">Bristol City</td><td class="grid-cell" style="background:#FBEE23;color:#000000">Watford</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Derby</td><td class="grid-cell" style="background:#122F67;color:#FFFFFF">WBA</td><td class="grid-cell" style="background:#FBEE23;color:#000000">Watford</td><td class="grid-cell" style="background:#1D5BA4;color:#FFFFFF">QPR</td><td class="grid-cell" style="background:#E21C21;color:#FFFFFF">Bristol City</td><td class="grid-cell" style="background:#E03A3E;color:#FFFFFF">Stoke</td></tr><tr><td class="grid-pos">15</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Swansea</td><td class="grid-cell" style="background:#E03A3E;color:#FFFFFF">Stoke</td><td class="grid-cell" style="background:#122F67;color:#FFFFFF">WBA</td><td class="grid-cell" style="background:#1D5BA4;color:#FFFFFF">QPR</td><td class="grid-cell" style="background:#E21C21;color:#FFFFFF">Bristol City</td><td class="grid-cell" style="background:#122F67;color:#FFFFFF">WBA</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Swansea</td><td class="grid-cell" style="background:#E7E6E1;color:#1B1464">Preston</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Swansea</td><td class="grid-cell" style="background:#E21C21;color:#FFFFFF">Bristol City</td><td class="grid-cell" style="background:#001489;color:#FFFFFF">Portsmouth</td><td class="grid-cell" style="background:#0044A3;color:#FFFFFF">Birmingham</td><td class="grid-cell" style="background:#C8102E;color:#000000">Lincoln</td><td class="grid-cell" style="background:#E21C21;color:#FFFFFF">Bristol City</td><td class="grid-cell" style="background:#1D5BA4;color:#FFFFFF">QPR</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Swansea</td></tr><tr><td class="grid-pos">16</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#FBEE23;color:#000000">Watford</td><td class="grid-cell" style="background:#E7E6E1;color:#1B1464">Preston</td><td class="grid-cell" style="background:#E03A3E;color:#FFFFFF">Stoke</td><td class="grid-cell" style="background:#FBEE23;color:#000000">Watford</td><td class="grid-cell" style="background:#0070B5;color:#FFFFFF">Cardiff</td><td class="grid-cell" style="background:#0070B5;color:#FFFFFF">Cardiff</td><td class="grid-cell" style="background:#E03A3E;color:#FFFFFF">Stoke</td><td class="grid-cell" style="background:#001489;color:#FFFFFF">Portsmouth</td><td class="grid-cell" style="background:#FBEE23;color:#000000">Watford</td><td class="grid-cell" style="background:#0070B5;color:#FFFFFF">Cardiff</td><td class="grid-cell" style="background:#FBEE23;color:#000000">Watford</td><td class="grid-cell" style="background:#FBEE23;color:#000000">Watford</td><td class="grid-cell" style="background:#0044A3;color:#FFFFFF">Birmingham</td><td class="grid-cell" style="background:#E03A3E;color:#FFFFFF">Stoke</td><td class="grid-cell" style="background:#E7E6E1;color:#1B1464">Preston</td><td class="grid-cell" style="background:#E21C21;color:#FFFFFF">Bristol City</td></tr><tr><td class="grid-pos">17</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#E21C21;color:#FFFFFF">Bristol City</td><td class="grid-cell" style="background:#FBEE23;color:#000000">Watford</td><td class="grid-cell" style="background:#1D5BA4;color:#FFFFFF">QPR</td><td class="grid-cell" style="background:#E21C21;color:#FFFFFF">Bristol City</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Swansea</td><td class="grid-cell" style="background:#FBEE23;color:#000000">Watford</td><td class="grid-cell" style="background:#FBEE23;color:#000000">Watford</td><td class="grid-cell" style="background:#FBEE23;color:#000000">Watford</td><td class="grid-cell" style="background:#E03A3E;color:#FFFFFF">Stoke</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Swansea</td><td class="grid-cell" style="background:#E7E6E1;color:#1B1464">Preston</td><td class="grid-cell" style="background:#0070B5;color:#FFFFFF">Cardiff</td><td class="grid-cell" style="background:#E21C21;color:#FFFFFF">Bristol City</td><td class="grid-cell" style="background:#001489;color:#FFFFFF">Portsmouth</td><td class="grid-cell" style="background:#001489;color:#FFFFFF">Portsmouth</td><td class="grid-cell" style="background:#FBEE23;color:#000000">Watford</td></tr><tr><td class="grid-pos">18</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#001489;color:#FFFFFF">Portsmouth</td><td class="grid-cell" style="background:#0070B5;color:#FFFFFF">Cardiff</td><td class="grid-cell" style="background:#005DAA;color:#FFFFFF">Blackburn</td><td class="grid-cell" style="background:#001489;color:#FFFFFF">Portsmouth</td><td class="grid-cell" style="background:#E7E6E1;color:#1B1464">Preston</td><td class="grid-cell" style="background:#E7E6E1;color:#1B1464">Preston</td><td class="grid-cell" style="background:#E7E6E1;color:#1B1464">Preston</td><td class="grid-cell" style="background:#122F67;color:#FFFFFF">WBA</td><td class="grid-cell" style="background:#001489;color:#FFFFFF">Portsmouth</td><td class="grid-cell" style="background:#E7E6E1;color:#1B1464">Preston</td><td class="grid-cell" style="background:#005DAA;color:#FFFFFF">Blackburn</td><td class="grid-cell" style="background:#001489;color:#FFFFFF">Portsmouth</td><td class="grid-cell" style="background:#E7E6E1;color:#000000">Swansea</td><td class="grid-cell" style="background:#FBEE23;color:#000000">Watford</td><td class="grid-cell" style="background:#E03A3E;color:#FFFFFF">Stoke</td><td class="grid-cell" style="background:#C8102E;color:#000000">Lincoln</td></tr><tr><td class="grid-pos">19</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#C8102E;color:#000000">Lincoln</td><td class="grid-cell" style="background:#1D5BA4;color:#FFFFFF">QPR</td><td class="grid-cell" style="background:#001489;color:#FFFFFF">Portsmouth</td><td class="grid-cell" style="background:#E7E6E1;color:#1B1464">Preston</td><td class="grid-cell" style="background:#E7E6E1;color:#003C71">Bolton</td><td class="grid-cell" style="background:#E03A3E;color:#FFFFFF">Stoke</td><td class="grid-cell" style="background:#0070B5;color:#FFFFFF">Cardiff</td><td class="grid-cell" style="background:#005DAA;color:#FFFFFF">Blackburn</td><td class="grid-cell" style="background:#C8102E;color:#000000">Lincoln</td><td class="grid-cell" style="background:#D2122E;color:#FFFFFF">Charlton</td><td class="grid-cell" style="background:#1D5BA4;color:#FFFFFF">QPR</td><td class="grid-cell" style="background:#E7E6E1;color:#1B1464">Preston</td><td class="grid-cell" style="background:#E7E6E1;color:#1B1464">Preston</td><td class="grid-cell" style="background:#E7E6E1;color:#003C71">Bolton</td><td class="grid-cell" style="background:#FBEE23;color:#000000">Watford</td><td class="grid-cell" style="background:#0070B5;color:#FFFFFF">Cardiff</td></tr><tr><td class="grid-pos">20</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#0070B5;color:#FFFFFF">Cardiff</td><td class="grid-cell" style="background:#E7E6E1;color:#003C71">Bolton</td><td class="grid-cell" style="background:#0070B5;color:#FFFFFF">Cardiff</td><td class="grid-cell" style="background:#005DAA;color:#FFFFFF">Blackburn</td><td class="grid-cell" style="background:#001489;color:#FFFFFF">Portsmouth</td><td class="grid-cell" style="background:#005DAA;color:#FFFFFF">Blackburn</td><td class="grid-cell" style="background:#001489;color:#FFFFFF">Portsmouth</td><td class="grid-cell" style="background:#0070B5;color:#FFFFFF">Cardiff</td><td class="grid-cell" style="background:#0070B5;color:#FFFFFF">Cardiff</td><td class="grid-cell" style="background:#001489;color:#FFFFFF">Portsmouth</td><td class="grid-cell" style="background:#0070B5;color:#FFFFFF">Cardiff</td><td class="grid-cell" style="background:#E03A3E;color:#FFFFFF">Stoke</td><td class="grid-cell" style="background:#0070B5;color:#FFFFFF">Cardiff</td><td class="grid-cell" style="background:#E7E6E1;color:#1B1464">Preston</td><td class="grid-cell" style="background:#E7E6E1;color:#003C71">Bolton</td><td class="grid-cell" style="background:#005DAA;color:#FFFFFF">Blackburn</td></tr><tr><td class="grid-pos">21</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#E7E6E1;color:#1B1464">Preston</td><td class="grid-cell" style="background:#001489;color:#FFFFFF">Portsmouth</td><td class="grid-cell" style="background:#E7E6E1;color:#1B1464">Preston</td><td class="grid-cell" style="background:#D2122E;color:#FFFFFF">Charlton</td><td class="grid-cell" style="background:#005DAA;color:#FFFFFF">Blackburn</td><td class="grid-cell" style="background:#001489;color:#FFFFFF">Portsmouth</td><td class="grid-cell" style="background:#C8102E;color:#000000">Lincoln</td><td class="grid-cell" style="background:#C8102E;color:#000000">Lincoln</td><td class="grid-cell" style="background:#E7E6E1;color:#003C71">Bolton</td><td class="grid-cell" style="background:#005DAA;color:#FFFFFF">Blackburn</td><td class="grid-cell" style="background:#D2122E;color:#FFFFFF">Charlton</td><td class="grid-cell" style="background:#005DAA;color:#FFFFFF">Blackburn</td><td class="grid-cell" style="background:#E03A3E;color:#FFFFFF">Stoke</td><td class="grid-cell" style="background:#D2122E;color:#FFFFFF">Charlton</td><td class="grid-cell" style="background:#0070B5;color:#FFFFFF">Cardiff</td><td class="grid-cell" style="background:#E7E6E1;color:#1B1464">Preston</td></tr><tr><td class="grid-pos">22</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#005DAA;color:#FFFFFF">Blackburn</td><td class="grid-cell" style="background:#005DAA;color:#FFFFFF">Blackburn</td><td class="grid-cell" style="background:#D2122E;color:#FFFFFF">Charlton</td><td class="grid-cell" style="background:#E7E6E1;color:#003C71">Bolton</td><td class="grid-cell" style="background:#C8102E;color:#000000">Lincoln</td><td class="grid-cell" style="background:#E7E6E1;color:#003C71">Bolton</td><td class="grid-cell" style="background:#D2122E;color:#FFFFFF">Charlton</td><td class="grid-cell" style="background:#1D5BA4;color:#FFFFFF">QPR</td><td class="grid-cell" style="background:#005DAA;color:#FFFFFF">Blackburn</td><td class="grid-cell" style="background:#C8102E;color:#000000">Lincoln</td><td class="grid-cell" style="background:#E7E6E1;color:#003C71">Bolton</td><td class="grid-cell" style="background:#D2122E;color:#FFFFFF">Charlton</td><td class="grid-cell" style="background:#005DAA;color:#FFFFFF">Blackburn</td><td class="grid-cell" style="background:#0070B5;color:#FFFFFF">Cardiff</td><td class="grid-cell" style="background:#D2122E;color:#FFFFFF">Charlton</td><td class="grid-cell" style="background:#D2122E;color:#FFFFFF">Charlton</td></tr><tr><td class="grid-pos">23</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#E7E6E1;color:#003C71">Bolton</td><td class="grid-cell" style="background:#D2122E;color:#FFFFFF">Charlton</td><td class="grid-cell" style="background:#C8102E;color:#000000">Lincoln</td><td class="grid-cell" style="background:#0070B5;color:#FFFFFF">Cardiff</td><td class="grid-cell" style="background:#1D5BA4;color:#FFFFFF">QPR</td><td class="grid-cell" style="background:#D2122E;color:#FFFFFF">Charlton</td><td class="grid-cell" style="background:#005DAA;color:#FFFFFF">Blackburn</td><td class="grid-cell" style="background:#D2122E;color:#FFFFFF">Charlton</td><td class="grid-cell" style="background:#E7E6E1;color:#1B1464">Preston</td><td class="grid-cell" style="background:#E7E6E1;color:#003C71">Bolton</td><td class="grid-cell" style="background:#122F67;color:#FFFFFF">WBA</td><td class="grid-cell" style="background:#C8102E;color:#000000">Lincoln</td><td class="grid-cell" style="background:#D2122E;color:#FFFFFF">Charlton</td><td class="grid-cell" style="background:#005DAA;color:#FFFFFF">Blackburn</td><td class="grid-cell" style="background:#005DAA;color:#FFFFFF">Blackburn</td><td class="grid-cell" style="background:#001489;color:#FFFFFF">Portsmouth</td></tr><tr><td class="grid-pos">24</td><td class="grid-cell grid-cell-empty">TBD</td><td class="grid-cell" style="background:#D2122E;color:#FFFFFF">Charlton</td><td class="grid-cell" style="background:#C8102E;color:#000000">Lincoln</td><td class="grid-cell" style="background:#E7E6E1;color:#003C71">Bolton</td><td class="grid-cell" style="background:#C8102E;color:#000000">Lincoln</td><td class="grid-cell" style="background:#D2122E;color:#FFFFFF">Charlton</td><td class="grid-cell" style="background:#C8102E;color:#000000">Lincoln</td><td class="grid-cell" style="background:#E7E6E1;color:#003C71">Bolton</td><td class="grid-cell" style="background:#E7E6E1;color:#003C71">Bolton</td><td class="grid-cell" style="background:#D2122E;color:#FFFFFF">Charlton</td><td class="grid-cell" style="background:#1D5BA4;color:#FFFFFF">QPR</td><td class="grid-cell" style="background:#C8102E;color:#000000">Lincoln</td><td class="grid-cell" style="background:#E7E6E1;color:#003C71">Bolton</td><td class="grid-cell" style="background:#E7E6E1;color:#003C71">Bolton</td><td class="grid-cell" style="background:#C8102E;color:#000000">Lincoln</td><td class="grid-cell" style="background:#C8102E;color:#000000">Lincoln</td><td class="grid-cell" style="background:#E7E6E1;color:#003C71">Bolton</td></tr></tbody>
+          <tfoot><tr class="grid-total-row"><td class="grid-pos-head"></td><td class="grid-total-label">Total</td><td class="grid-total">—</td><td class="grid-total">—</td><td class="grid-total">—</td><td class="grid-total">—</td><td class="grid-total">—</td><td class="grid-total">—</td><td class="grid-total">—</td><td class="grid-total">—</td><td class="grid-total">—</td><td class="grid-total">—</td><td class="grid-total">—</td><td class="grid-total">—</td><td class="grid-total">—</td><td class="grid-total">—</td><td class="grid-total">—</td><td class="grid-total">—</td></tr></tfoot>
+        </table>
+      </div>
+    </section>
+    
+
+  <footer>Auto-refreshed daily from live standings. Add participants and predictions to the tracker's data file to activate scoring.</footer>
+</div>
+<script>
+  var THEME_ORDER = ['light', 'dark', 'itfc'];
+  var THEME_LABELS = { light: 'Light mode', dark: 'Dark mode', itfc: 'ITFC mode' };
+
+  function nextTheme(current) {
+    var idx = THEME_ORDER.indexOf(current);
+    return THEME_ORDER[(idx + 1) % THEME_ORDER.length];
+  }
+
+  function updateToggleLabel() {
+    var current = document.documentElement.getAttribute('data-theme') || 'light';
+    document.getElementById('themeToggle').textContent = THEME_LABELS[nextTheme(current)];
+  }
+
+  function toggleTheme() {
+    var root = document.documentElement;
+    var current = root.getAttribute('data-theme') || 'light';
+    root.setAttribute('data-theme', nextTheme(current));
+    updateToggleLabel();
+  }
+
+  updateToggleLabel();
+</script>
+</body>
+</html>
