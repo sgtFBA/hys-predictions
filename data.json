@@ -503,9 +503,34 @@
   },
   "current_tables": {
     "premier_league": [],
-    "championship": []
+    "championship": [
+      "Blackburn Rovers",
+      "Wolverhampton Wanderers",
+      "Birmingham City",
+      "Bolton Wanderers",
+      "Bristol City",
+      "Burnley",
+      "Cardiff City",
+      "Charlton Athletic",
+      "Derby County",
+      "Lincoln City",
+      "Middlesbrough",
+      "Millwall",
+      "Norwich City",
+      "Portsmouth",
+      "Preston North End",
+      "Queens Park Rangers",
+      "Sheffield United",
+      "Southampton",
+      "Stoke City",
+      "Swansea City",
+      "Watford",
+      "West Bromwich Albion",
+      "West Ham United",
+      "Wrexham AFC"
+    ]
   },
-  "last_checked": "2026-08-15T07:22:38Z",
+  "last_checked": "2026-08-15T07:50:46Z",
   "notes": [
     "premier_league and championship team lists above are placeholders for the note that team names in current_tables/predictions must match exactly (case-sensitive) the names in leagues.*.teams.",
     "current_tables entries are ordered lists of team names, position = index + 1. Empty array = season not yet started / no data fetched yet.",
