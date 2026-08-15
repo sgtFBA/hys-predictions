@@ -92,18 +92,77 @@ def normalize_name(raw, alias_map):
     key = raw.strip().lower()
     if key in alias_map:
         return alias_map[key]
-    # try stripping a trailing " fc" / " afc"
     for suffix in (" fc", " afc"):
         if key.endswith(suffix) and key[: -len(suffix)] in alias_map:
             return alias_map[key[: -len(suffix)]]
     return None
 
 
-def fetch_standings(competition_code):
-    url = f"https://api.football-data.org/v4/competitions/{competition_code}/standings"
+def fetch_finished_matches(competition_code):
+    """football-data.org's precomputed /standings endpoint lags noticeably for
+    lower-profile competitions on the free tier (observed: still showing 0
+    games played many hours after full time). Match results themselves are
+    recorded promptly, so we pull finished matches and compute the table
+    ourselves instead of trusting their standings cache."""
+    url = f"https://api.football-data.org/v4/competitions/{competition_code}/matches?status=FINISHED"
     req = urllib.request.Request(url, headers={"X-Auth-Token": TOKEN})
     with urllib.request.urlopen(req, timeout=30) as resp:
         return json.loads(resp.read().decode("utf-8"))
+
+
+def compute_table(matches, canonical, alias_map):
+    """Returns (ordered_canonical_names, played_total, problems) where
+    problems is a list of raw team names we couldn't map to a canonical
+    team - caller should treat that as reason to bail out rather than
+    write a possibly-wrong table."""
+    stats = {name: {"points": 0, "gf": 0, "ga": 0, "played": 0} for name in canonical}
+    problems = []
+    played_total = 0
+
+    for m in matches:
+        if m.get("status") != "FINISHED":
+            continue
+        score = m.get("score", {}).get("fullTime", {})
+        home_goals, away_goals = score.get("home"), score.get("away")
+        if home_goals is None or away_goals is None:
+            continue
+
+        home_raw = m["homeTeam"]["name"]
+        away_raw = m["awayTeam"]["name"]
+        home = normalize_name(home_raw, alias_map)
+        away = normalize_name(away_raw, alias_map)
+        if home is None:
+            problems.append(home_raw)
+        if away is None:
+            problems.append(away_raw)
+        if home is None or away is None:
+            continue
+
+        played_total += 1
+        stats[home]["played"] += 1
+        stats[away]["played"] += 1
+        stats[home]["gf"] += home_goals
+        stats[home]["ga"] += away_goals
+        stats[away]["gf"] += away_goals
+        stats[away]["ga"] += home_goals
+        if home_goals > away_goals:
+            stats[home]["points"] += 3
+        elif away_goals > home_goals:
+            stats[away]["points"] += 3
+        else:
+            stats[home]["points"] += 1
+            stats[away]["points"] += 1
+
+    ordered = sorted(
+        canonical,
+        key=lambda name: (
+            -stats[name]["points"],
+            -(stats[name]["gf"] - stats[name]["ga"]),
+            -stats[name]["gf"],
+            name,
+        ),
+    )
+    return ordered, played_total, problems
 
 
 def main():
@@ -123,50 +182,31 @@ def main():
             CHAMPIONSHIP_NAME_MAP if league_key == "championship" else PREMIER_LEAGUE_NAME_MAP
         )
         try:
-            payload = fetch_standings(comp_code)
+            payload = fetch_finished_matches(comp_code)
         except urllib.error.HTTPError as e:
             if e.code in (401, 403):
                 print(f"AUTH ERROR fetching {league_key}: HTTP {e.code} - check FOOTBALL_DATA_TOKEN", file=sys.stderr)
                 any_auth_error = True
             else:
-                print(f"WARNING: HTTP {e.code} fetching {league_key} standings, leaving as-is", file=sys.stderr)
+                print(f"WARNING: HTTP {e.code} fetching {league_key} matches, leaving as-is", file=sys.stderr)
             continue
         except Exception as e:
-            print(f"WARNING: failed to fetch {league_key} standings ({e}), leaving as-is", file=sys.stderr)
+            print(f"WARNING: failed to fetch {league_key} matches ({e}), leaving as-is", file=sys.stderr)
             continue
 
-        try:
-            table = next(s for s in payload["standings"] if s["type"] == "TOTAL")["table"]
-        except (KeyError, StopIteration):
-            print(f"WARNING: unexpected response shape for {league_key}, leaving as-is", file=sys.stderr)
-            continue
+        matches = payload.get("matches", [])
+        ordered, played_total, problems = compute_table(matches, canonical, alias_map)
 
-        played_total = sum(row.get("playedGames", 0) for row in table)
         if played_total == 0:
-            print(f"{league_key}: season not started (0 games played), leaving current_tables as-is")
+            print(f"{league_key}: season not started (0 finished matches), leaving current_tables as-is")
             continue
-
-        ordered = sorted(table, key=lambda r: r["position"])
-        mapped = []
-        problems = []
-        for row in ordered:
-            raw_name = row["team"]["name"]
-            canon = normalize_name(raw_name, alias_map)
-            if canon is None:
-                problems.append(raw_name)
-            else:
-                mapped.append(canon)
 
         if problems:
-            print(f"WARNING: {league_key} unrecognized team name(s) {problems} - leaving current_tables as-is", file=sys.stderr)
-            continue
-        if set(mapped) != canonical or len(mapped) != len(canonical):
-            print(f"WARNING: {league_key} mapped team set doesn't match canonical list - leaving current_tables as-is "
-                  f"(missing={canonical - set(mapped)} extra={set(mapped) - canonical})", file=sys.stderr)
+            print(f"WARNING: {league_key} unrecognized team name(s) {sorted(set(problems))} - leaving current_tables as-is", file=sys.stderr)
             continue
 
-        data["current_tables"][league_key] = mapped
-        print(f"{league_key}: updated current_tables ({played_total} games played across the league)")
+        data["current_tables"][league_key] = ordered
+        print(f"{league_key}: updated current_tables ({played_total} finished matches)")
 
     data["last_checked"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
