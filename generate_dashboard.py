@@ -67,6 +67,21 @@ def esc(s):
     return html.escape(str(s))
 
 
+def table_team(entry):
+    """current_tables entries are normally {"team": ..., "played": ..., "won": ...,
+    "drawn": ..., "lost": ..., "gf": ..., "ga": ..., "gd": ..., "points": ...} dicts,
+    but tolerate a bare team-name string too (older data / manual edits)."""
+    if isinstance(entry, dict):
+        return entry.get("team")
+    return entry
+
+
+def table_stat(entry, key):
+    if isinstance(entry, dict):
+        return entry.get(key)
+    return None
+
+
 def hsl_to_hex(h, s, l):
     r, g, b = colorsys.hls_to_rgb((h % 360) / 360.0, l / 100.0, s / 100.0)
     return "#{:02x}{:02x}{:02x}".format(round(r * 255), round(g * 255), round(b * 255))
@@ -168,7 +183,7 @@ def compute_scores(league_key):
     preds = data["predictions"].get(league_key) or {}
     if not current or not preds:
         return {}
-    actual_pos = {team: i + 1 for i, team in enumerate(current)}
+    actual_pos = {table_team(entry): i + 1 for i, entry in enumerate(current)}
     scores = {}
     for participant, order in preds.items():
         total = 0
@@ -184,21 +199,52 @@ def compute_scores(league_key):
     return scores
 
 
+def _stat_cell(val):
+    return "—" if val is None else esc(val)
+
+
 def league_table_html(league_key):
     league = data["leagues"][league_key]
     current = data["current_tables"].get(league_key) or []
     name = league["name"]
+    has_stats = bool(current) and any(table_stat(e, "points") is not None for e in current)
     if not current:
         rows = "".join(
             f'<tr><td class="pos">{i+1}</td><td>{esc(t)}</td></tr>'
             for i, t in enumerate(league["teams"])
         )
+        header = "<tr><th>#</th><th>Team</th></tr>"
         badge = '<span class="badge badge-muted">Season not started — alphabetical listing</span>'
+    elif has_stats:
+        row_cells = []
+        for i, entry in enumerate(current):
+            team = table_team(entry)
+            p = _stat_cell(table_stat(entry, "played"))
+            w = _stat_cell(table_stat(entry, "won"))
+            d = _stat_cell(table_stat(entry, "drawn"))
+            l = _stat_cell(table_stat(entry, "lost"))
+            gd = table_stat(entry, "gd")
+            gd_txt = "—" if gd is None else (f"+{gd}" if gd > 0 else str(gd))
+            pts = _stat_cell(table_stat(entry, "points"))
+            row_cells.append(
+                f'<tr><td class="pos">{i+1}</td><td>{esc(team)}</td>'
+                f'<td class="num">{p}</td><td class="num">{w}</td><td class="num">{d}</td>'
+                f'<td class="num">{l}</td><td class="num">{gd_txt}</td>'
+                f'<td class="num pts">{pts}</td></tr>'
+            )
+        rows = "".join(row_cells)
+        header = (
+            "<tr><th>#</th><th>Team</th><th class=\"num\">P</th><th class=\"num\">W</th>"
+            "<th class=\"num\">D</th><th class=\"num\">L</th><th class=\"num\">GD</th>"
+            "<th class=\"num\">Pts</th></tr>"
+        )
+        badge = '<span class="badge badge-live">Live standings</span>'
     else:
         rows = "".join(
-            f'<tr><td class="pos">{i+1}</td><td>{esc(t)}</td></tr>'
-            for i, t in enumerate(current)
+            f'<tr><td class="pos">{i+1}</td><td>{esc(table_team(entry))}</td></tr>'
+            for i, entry in enumerate(current)
         )
+        header = "<tr><th>#</th><th>Team</th></tr>"
         badge = '<span class="badge badge-live">Live standings</span>'
     return f"""
     <section class="panel">
@@ -208,7 +254,7 @@ def league_table_html(league_key):
       </div>
       <div class="table-scroll">
         <table class="league-table">
-          <thead><tr><th>#</th><th>Team</th></tr></thead>
+          <thead>{header}</thead>
           <tbody>{rows}</tbody>
         </table>
       </div>
@@ -369,7 +415,7 @@ def prediction_grid_html(league_key):
 
     body_rows = []
     for i in range(len(teams)):
-        actual_team = current[i] if i < len(current) else None
+        actual_team = table_team(current[i]) if i < len(current) else None
         cells = [cell(actual_team, empty_label="TBD")]
         for p in ordered:
             order = preds.get(p) or []
@@ -444,7 +490,7 @@ else:
 generated_display = datetime.now(timezone.utc).strftime("%a %d %b %Y, %H:%M UTC")
 
 html_out = f"""<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="itfc">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -568,6 +614,8 @@ html_out = f"""<!DOCTYPE html>
     font-variant-numeric: tabular-nums;
   }}
   table.league-table td.pos {{ color: var(--text-secondary); width: 2.2em; }}
+  table.league-table th.num, table.league-table td.num {{ text-align: right; width: 2.6em; }}
+  table.league-table td.pts {{ font-weight: 700; color: var(--text-primary); }}
   table.league-table tr:last-child td {{ border-bottom: none; }}
   table.scores-table {{ width: 100%; border-collapse: collapse; font-size: 0.9rem; }}
   table.scores-table th {{
@@ -641,8 +689,9 @@ html_out = f"""<!DOCTYPE html>
   <header>
     <div class="header-row">
       <h1>{esc(data.get('game_name', 'League Predictions Tracker'))}</h1>
-      <button class="theme-toggle" id="themeToggle" type="button" onclick="toggleTheme()">Dark mode</button>
-      <!-- cycles Light → Dark → ITFC → Light; label always shows the mode you're about to switch TO -->
+      <button class="theme-toggle" id="themeToggle" type="button" onclick="toggleTheme()">Light mode</button>
+      <!-- ITFC mode is the default (data-theme="itfc" on <html>). Cycles Light → Dark → ITFC → Light;
+           label always shows the mode you're about to switch TO. -->
     </div>
     <div class="sub">Predict the final Premier League and Championship tables. Score = total distance between predicted and actual finishing position, summed across every team. Lowest combined score wins the group; highest loses.</div>
     <div class="meta-row">

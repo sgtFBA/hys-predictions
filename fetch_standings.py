@@ -111,11 +111,19 @@ def fetch_finished_matches(competition_code):
 
 
 def compute_table(matches, canonical, alias_map):
-    """Returns (ordered_canonical_names, played_total, problems) where
+    """Returns (ordered_team_stat_dicts, played_total, problems) where
     problems is a list of raw team names we couldn't map to a canonical
     team - caller should treat that as reason to bail out rather than
-    write a possibly-wrong table."""
-    stats = {name: {"points": 0, "gf": 0, "ga": 0, "played": 0} for name in canonical}
+    write a possibly-wrong table.
+
+    Each entry in ordered_team_stat_dicts is
+    {"team", "played", "won", "drawn", "lost", "gf", "ga", "gd", "points"} -
+    the dashboard (generate_dashboard.py) reads this richer shape to show
+    a full P/W/D/L/GD/Pts table, not just finishing order."""
+    stats = {
+        name: {"points": 0, "won": 0, "drawn": 0, "lost": 0, "gf": 0, "ga": 0, "played": 0}
+        for name in canonical
+    }
     problems = []
     played_total = 0
 
@@ -147,13 +155,19 @@ def compute_table(matches, canonical, alias_map):
         stats[away]["ga"] += home_goals
         if home_goals > away_goals:
             stats[home]["points"] += 3
+            stats[home]["won"] += 1
+            stats[away]["lost"] += 1
         elif away_goals > home_goals:
             stats[away]["points"] += 3
+            stats[away]["won"] += 1
+            stats[home]["lost"] += 1
         else:
             stats[home]["points"] += 1
             stats[away]["points"] += 1
+            stats[home]["drawn"] += 1
+            stats[away]["drawn"] += 1
 
-    ordered = sorted(
+    ordered_names = sorted(
         canonical,
         key=lambda name: (
             -stats[name]["points"],
@@ -162,6 +176,20 @@ def compute_table(matches, canonical, alias_map):
             name,
         ),
     )
+    ordered = [
+        {
+            "team": name,
+            "played": stats[name]["played"],
+            "won": stats[name]["won"],
+            "drawn": stats[name]["drawn"],
+            "lost": stats[name]["lost"],
+            "gf": stats[name]["gf"],
+            "ga": stats[name]["ga"],
+            "gd": stats[name]["gf"] - stats[name]["ga"],
+            "points": stats[name]["points"],
+        }
+        for name in ordered_names
+    ]
     return ordered, played_total, problems
 
 

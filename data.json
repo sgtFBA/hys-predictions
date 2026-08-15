@@ -78,10 +78,57 @@
     "Jack",
     "Ben",
     "Aidan",
-    "Tom Town"
+    "Tom Town",
+    "Greeno",
+    "Flude"
   ],
   "predictions": {
-    "premier_league": {},
+    "premier_league": {
+      "Hayd": [
+        "Manchester United",
+        "Arsenal",
+        "Chelsea",
+        "Manchester City",
+        "Tottenham Hotspur",
+        "Liverpool",
+        "Aston Villa",
+        "Brighton & Hove Albion",
+        "Everton",
+        "Ipswich Town",
+        "AFC Bournemouth",
+        "Leeds United",
+        "Coventry City",
+        "Nottingham Forest",
+        "Fulham",
+        "Newcastle United",
+        "Brentford",
+        "Sunderland",
+        "Crystal Palace",
+        "Hull City"
+      ],
+      "Jase": [
+        "Arsenal",
+        "Manchester City",
+        "Liverpool",
+        "Chelsea",
+        "Manchester United",
+        "Tottenham Hotspur",
+        "Aston Villa",
+        "Newcastle United",
+        "Nottingham Forest",
+        "Brighton & Hove Albion",
+        "Everton",
+        "Ipswich Town",
+        "AFC Bournemouth",
+        "Leeds United",
+        "Sunderland",
+        "Brentford",
+        "Crystal Palace",
+        "Coventry City",
+        "Fulham",
+        "Hull City"
+      ]
+    },
     "championship": {
       "Dec": [
         "West Ham United",
@@ -498,6 +545,58 @@
         "Charlton Athletic",
         "Portsmouth",
         "Bolton Wanderers"
+      ],
+      "Greeno": [
+        "West Ham United",
+        "Wolverhampton Wanderers",
+        "Middlesbrough",
+        "Burnley",
+        "Wrexham AFC",
+        "Millwall",
+        "Norwich City",
+        "Birmingham City",
+        "Southampton",
+        "Sheffield United",
+        "Watford",
+        "Derby County",
+        "West Bromwich Albion",
+        "Bristol City",
+        "Blackburn Rovers",
+        "Stoke City",
+        "Queens Park Rangers",
+        "Cardiff City",
+        "Portsmouth",
+        "Preston North End",
+        "Swansea City",
+        "Charlton Athletic",
+        "Lincoln City",
+        "Bolton Wanderers"
+      ],
+      "Flude": [
+        "West Ham United",
+        "Wolverhampton Wanderers",
+        "Middlesbrough",
+        "Burnley",
+        "Birmingham City",
+        "Norwich City",
+        "Southampton",
+        "Wrexham AFC",
+        "Millwall",
+        "Sheffield United",
+        "Watford",
+        "Derby County",
+        "West Bromwich Albion",
+        "Bristol City",
+        "Swansea City",
+        "Stoke City",
+        "Queens Park Rangers",
+        "Portsmouth",
+        "Cardiff City",
+        "Preston North End",
+        "Blackburn Rovers",
+        "Charlton Athletic",
+        "Lincoln City",
+        "Bolton Wanderers"
       ]
     }
   },
@@ -533,7 +632,7 @@
   "last_checked": "2026-08-15T16:36:49Z",
   "notes": [
     "premier_league and championship team lists above are placeholders for the note that team names in current_tables/predictions must match exactly (case-sensitive) the names in leagues.*.teams.",
-    "current_tables entries are ordered lists of team names, position = index + 1. Empty array = season not yet started / no data fetched yet.",
-    "predictions.<league>.<participant name> is an ordered list of team names (that participant's predicted final position 1..N)."
+    "current_tables.<league> is an ordered array (position = index + 1) of objects: {\"team\": <exact team name>, \"played\": int, \"won\": int, \"drawn\": int, \"lost\": int, \"gf\": int, \"ga\": int, \"gd\": int, \"points\": int}. Empty array = season not yet started / no data fetched yet.",
+    "predictions.<league>.<participant name> is an ordered list of team names (that participant predicted final position 1..N)."
   ]
 }
