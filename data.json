@@ -530,7 +530,7 @@
       "Preston North End"
     ]
   },
-  "last_checked": "2026-08-15T14:35:17Z",
+  "last_checked": "2026-08-15T15:32:17Z",
   "notes": [
     "premier_league and championship team lists above are placeholders for the note that team names in current_tables/predictions must match exactly (case-sensitive) the names in leagues.*.teams.",
     "current_tables entries are ordered lists of team names, position = index + 1. Empty array = season not yet started / no data fetched yet.",
