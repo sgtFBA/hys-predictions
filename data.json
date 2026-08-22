@@ -989,6 +989,17 @@
         "points": 3
       },
       {
+        "team": "Brentford",
+        "played": 1,
+        "won": 1,
+        "drawn": 0,
+        "lost": 0,
+        "gf": 3,
+        "ga": 0,
+        "gd": 3,
+        "points": 3
+      },
+      {
         "team": "Everton",
         "played": 1,
         "won": 1,
@@ -1045,17 +1056,6 @@
       },
       {
         "team": "Aston Villa",
-        "played": 0,
-        "won": 0,
-        "drawn": 0,
-        "lost": 0,
-        "gf": 0,
-        "ga": 0,
-        "gd": 0,
-        "points": 0
-      },
-      {
-        "team": "Brentford",
         "played": 0,
         "won": 0,
         "drawn": 0,
@@ -1132,17 +1132,6 @@
         "points": 0
       },
       {
-        "team": "Tottenham Hotspur",
-        "played": 0,
-        "won": 0,
-        "drawn": 0,
-        "lost": 0,
-        "gf": 0,
-        "ga": 0,
-        "gd": 0,
-        "points": 0
-      },
-      {
         "team": "Sunderland",
         "played": 1,
         "won": 0,
@@ -1188,6 +1177,17 @@
       },
       {
         "team": "Coventry City",
+        "played": 1,
+        "won": 0,
+        "drawn": 0,
+        "lost": 1,
+        "gf": 0,
+        "ga": 3,
+        "gd": -3,
+        "points": 0
+      },
+      {
+        "team": "Tottenham Hotspur",
         "played": 1,
         "won": 0,
         "drawn": 0,
@@ -1465,7 +1465,7 @@
       }
     ]
   },
-  "last_checked": "2026-08-22T17:32:29Z",
+  "last_checked": "2026-08-22T18:45:43Z",
   "notes": [
     "premier_league and championship team lists above are placeholders for the note that team names in current_tables/predictions must match exactly (case-sensitive) the names in leagues.*.teams.",
     "current_tables.<league> is an ordered array (position = index + 1) of objects: {\"team\": <exact team name>, \"played\": int, \"won\": int, \"drawn\": int, \"lost\": int, \"gf\": int, \"ga\": int, \"gd\": int, \"points\": int}. Empty array = season not yet started / no data fetched yet.",
