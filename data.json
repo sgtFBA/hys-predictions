@@ -978,6 +978,17 @@
   "current_tables": {
     "premier_league": [
       {
+        "team": "Brighton & Hove Albion",
+        "played": 1,
+        "won": 1,
+        "drawn": 0,
+        "lost": 0,
+        "gf": 4,
+        "ga": 0,
+        "gd": 4,
+        "points": 3
+      },
+      {
         "team": "Arsenal",
         "played": 1,
         "won": 1,
@@ -1033,6 +1044,17 @@
         "points": 3
       },
       {
+        "team": "Manchester City",
+        "played": 1,
+        "won": 1,
+        "drawn": 0,
+        "lost": 0,
+        "gf": 2,
+        "ga": 1,
+        "gd": 1,
+        "points": 3
+      },
+      {
         "team": "Leeds United",
         "played": 1,
         "won": 1,
@@ -1042,39 +1064,6 @@
         "ga": 0,
         "gd": 1,
         "points": 3
-      },
-      {
-        "team": "AFC Bournemouth",
-        "played": 0,
-        "won": 0,
-        "drawn": 0,
-        "lost": 0,
-        "gf": 0,
-        "ga": 0,
-        "gd": 0,
-        "points": 0
-      },
-      {
-        "team": "Aston Villa",
-        "played": 0,
-        "won": 0,
-        "drawn": 0,
-        "lost": 0,
-        "gf": 0,
-        "ga": 0,
-        "gd": 0,
-        "points": 0
-      },
-      {
-        "team": "Brighton & Hove Albion",
-        "played": 0,
-        "won": 0,
-        "drawn": 0,
-        "lost": 0,
-        "gf": 0,
-        "ga": 0,
-        "gd": 0,
-        "points": 0
       },
       {
         "team": "Chelsea",
@@ -1110,7 +1099,7 @@
         "points": 0
       },
       {
-        "team": "Manchester City",
+        "team": "Newcastle United",
         "played": 0,
         "won": 0,
         "drawn": 0,
@@ -1121,14 +1110,14 @@
         "points": 0
       },
       {
-        "team": "Newcastle United",
-        "played": 0,
+        "team": "AFC Bournemouth",
+        "played": 1,
         "won": 0,
         "drawn": 0,
-        "lost": 0,
-        "gf": 0,
-        "ga": 0,
-        "gd": 0,
+        "lost": 1,
+        "gf": 1,
+        "ga": 2,
+        "gd": -1,
         "points": 0
       },
       {
@@ -1195,6 +1184,17 @@
         "gf": 0,
         "ga": 3,
         "gd": -3,
+        "points": 0
+      },
+      {
+        "team": "Aston Villa",
+        "played": 1,
+        "won": 0,
+        "drawn": 0,
+        "lost": 1,
+        "gf": 0,
+        "ga": 4,
+        "gd": -4,
         "points": 0
       }
     ],
@@ -1465,7 +1465,7 @@
       }
     ]
   },
-  "last_checked": "2026-08-23T14:35:17Z",
+  "last_checked": "2026-08-23T15:33:29Z",
   "notes": [
     "premier_league and championship team lists above are placeholders for the note that team names in current_tables/predictions must match exactly (case-sensitive) the names in leagues.*.teams.",
     "current_tables.<league> is an ordered array (position = index + 1) of objects: {\"team\": <exact team name>, \"played\": int, \"won\": int, \"drawn\": int, \"lost\": int, \"gf\": int, \"ga\": int, \"gd\": int, \"points\": int}. Empty array = season not yet started / no data fetched yet.",
