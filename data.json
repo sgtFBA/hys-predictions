@@ -989,6 +989,17 @@
         "points": 6
       },
       {
+        "team": "Arsenal",
+        "played": 2,
+        "won": 2,
+        "drawn": 0,
+        "lost": 0,
+        "gf": 4,
+        "ga": 0,
+        "gd": 4,
+        "points": 6
+      },
+      {
         "team": "Hull City",
         "played": 2,
         "won": 2,
@@ -1062,17 +1073,6 @@
         "lost": 1,
         "gf": 7,
         "ga": 4,
-        "gd": 3,
-        "points": 3
-      },
-      {
-        "team": "Arsenal",
-        "played": 1,
-        "won": 1,
-        "drawn": 0,
-        "lost": 0,
-        "gf": 3,
-        "ga": 0,
         "gd": 3,
         "points": 3
       },
@@ -1154,17 +1154,6 @@
         "points": 0
       },
       {
-        "team": "Aston Villa",
-        "played": 1,
-        "won": 0,
-        "drawn": 0,
-        "lost": 1,
-        "gf": 0,
-        "ga": 4,
-        "gd": -4,
-        "points": 0
-      },
-      {
         "team": "Coventry City",
         "played": 2,
         "won": 0,
@@ -1183,6 +1172,17 @@
         "lost": 2,
         "gf": 1,
         "ga": 6,
+        "gd": -5,
+        "points": 0
+      },
+      {
+        "team": "Aston Villa",
+        "played": 2,
+        "won": 0,
+        "drawn": 0,
+        "lost": 2,
+        "gf": 0,
+        "ga": 5,
         "gd": -5,
         "points": 0
       },
@@ -1465,7 +1465,7 @@
       }
     ]
   },
-  "last_checked": "2026-09-01T01:49:00Z",
+  "last_checked": "2026-09-01T12:31:59Z",
   "notes": [
     "premier_league and championship team lists above are placeholders for the note that team names in current_tables/predictions must match exactly (case-sensitive) the names in leagues.*.teams.",
     "current_tables.<league> is an ordered array (position = index + 1) of objects: {\"team\": <exact team name>, \"played\": int, \"won\": int, \"drawn\": int, \"lost\": int, \"gf\": int, \"ga\": int, \"gd\": int, \"points\": int}. Empty array = season not yet started / no data fetched yet.",
