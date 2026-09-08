@@ -316,23 +316,36 @@ def leaderboard_html():
         </section>
         """
 
+    # A "combined" score only means something if someone has a real score in
+    # BOTH leagues - treating a missing league as 0 would make them look
+    # artificially good (0 is the best possible score, not a neutral
+    # placeholder). Anyone missing one league's score gets excluded from the
+    # ranked list and called out separately instead, so the ranking stays fair
+    # for everyone who has completed both.
     combined = {}
-    any_scores = False
+    incomplete = []
     for p in participants:
         pl = pl_scores.get(p)
         ch = champ_scores.get(p)
         if pl is None and ch is None:
             continue
-        total = (pl or 0) + (ch or 0)
-        combined[p] = {"pl": pl, "ch": ch, "total": total}
-        any_scores = True
+        if pl is None or ch is None:
+            incomplete.append((p, pl, ch))
+            continue
+        combined[p] = {"pl": pl, "ch": ch, "total": pl + ch}
 
-    if not any_scores:
-        return """
+    if not combined:
+        note = ""
+        if incomplete:
+            missing_names = ", ".join(esc(p) for p, _, _ in incomplete)
+            note = f'<p class="empty-state">Missing one league\'s prediction: {missing_names}.</p>'
+        return f"""
         <section class="panel">
           <div class="panel-head"><h2>Leaderboard</h2></div>
           <p class="empty-state">Predictions are in, but the season hasn't produced a live table yet
-          — scores will appear here as soon as results start counting.</p>
+          for enough people to rank — scores will appear here once results start counting for
+          someone with both leagues predicted.</p>
+          {note}
         </section>
         """
 
@@ -347,8 +360,6 @@ def leaderboard_html():
             tag = '<span class="tag tag-good">Leading</span>'
         elif idx == len(ranked) - 1 and len(ranked) > 1:
             tag = '<span class="tag tag-critical">Trailing</span>'
-        pl_txt = v["pl"] if v["pl"] is not None else "—"
-        ch_txt = v["ch"] if v["ch"] is not None else "—"
         rows.append(f"""
         <div class="lb-row">
           <div class="lb-rank">{idx + 1}</div>
@@ -357,19 +368,28 @@ def leaderboard_html():
             <div class="lb-bar" style="width:{pct}%"></div>
           </div>
           <div class="lb-total">{v['total']} pts</div>
-          <div class="lb-split">PL {pl_txt} &middot; Champ {ch_txt}</div>
+          <div class="lb-split">PL {v['pl']} &middot; Champ {v['ch']}</div>
         </div>
         """)
+
+    incomplete_note = ""
+    if incomplete:
+        bits = []
+        for p, pl, ch in incomplete:
+            missing_league = "Championship" if pl is not None else "Premier League"
+            bits.append(f"{esc(p)} (missing {missing_league} prediction)")
+        incomplete_note = f'<p class="empty-state">Not yet rankable — {", ".join(bits)}.</p>'
 
     return f"""
     <section class="panel">
       <div class="panel-head">
         <h2>Leaderboard</h2>
-        <span class="badge badge-muted">Lowest total wins</span>
+        <span class="badge badge-muted">Combined Premier League + Championship — lowest total wins</span>
       </div>
       <div class="leaderboard">
         {''.join(rows)}
       </div>
+      {incomplete_note}
     </section>
     """
 
@@ -700,6 +720,8 @@ html_out = f"""<!DOCTYPE html>
       <span>Dashboard generated: {esc(generated_display)}</span>
     </div>
   </header>
+
+  {leaderboard_html()}
 
   {scores_row_html()}
 
