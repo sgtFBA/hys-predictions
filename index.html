@@ -130,16 +130,22 @@
   table.league-table th.num, table.league-table td.num { text-align: right; width: 2.6em; }
   table.league-table td.pts { font-weight: 700; color: var(--text-primary); }
   table.league-table tr:last-child td { border-bottom: none; }
-  table.scores-table { width: auto; max-width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  /* table-layout:fixed + widths on the header row (not the body) is what
+     table-layout:fixed actually reads - the name column is left unset so it
+     alone absorbs the remaining width, and the score column is pinned to a
+     narrow width and right-aligned so it hugs the panel's right edge instead
+     of leaving empty space stranded between the two. */
+  table.scores-table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 0.82rem; }
   table.scores-table th {
     text-align: left; font-size: 0.72rem; color: var(--text-secondary);
     border-bottom: 1px solid var(--gridline); padding: 4px 10px;
   }
   table.scores-table td { padding: 4px 10px; border-bottom: 1px solid var(--gridline); }
-  table.scores-table th:last-child, table.scores-table td:last-child { padding-right: 4px; }
+  table.scores-table th:first-child { width: 2.4em; }
+  table.scores-table th:last-child { width: 4.5em; text-align: right; }
   table.scores-table tr:last-child td { border-bottom: none; }
-  table.scores-table .scores-rank { color: var(--text-secondary); width: 2.2em; font-variant-numeric: tabular-nums; }
-  table.scores-table .scores-num { font-variant-numeric: tabular-nums; }
+  table.scores-table .scores-rank { color: var(--text-secondary); width: 2.4em; font-variant-numeric: tabular-nums; }
+  table.scores-table .scores-num { text-align: right; font-variant-numeric: tabular-nums; }
   table.scores-table .scores-total { font-weight: 700; }
   table.scores-table .scores-row-leader { background: var(--good-bg); }
   table.scores-table .scores-row-leader td { color: var(--good); font-weight: 700; }
@@ -211,7 +217,7 @@
     <div class="meta-row">
       <span>Season 2026-27</span>
       <span>Results last checked: Tue 08 Sep 2026, 12:06 UTC</span>
-      <span>Dashboard generated: Tue 08 Sep 2026, 21:55 UTC</span>
+      <span>Dashboard generated: Tue 08 Sep 2026, 22:02 UTC</span>
     </div>
   </header>
 
