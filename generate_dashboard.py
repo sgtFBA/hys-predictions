@@ -286,7 +286,7 @@ def league_scores_table_html(league_key):
         )
 
     return f"""
-    <section class="panel">
+    <section class="panel panel-compact">
       <div class="panel-head">
         <h2>{esc(league['name'])} Scores</h2>
         <span class="badge badge-muted">Lowest total wins</span>
@@ -465,25 +465,29 @@ def prediction_grid_html(league_key):
     """
 
 
-def scores_row_html():
-    """Both leagues' scores tables side by side."""
-    if not data.get("participants"):
-        return ""
+def tables_and_scores_row_html():
+    """One row, both leagues' actual table + scores table, read outside-in:
+    PL table, PL scores, | centre |, Champ scores, Champ table. Split into a
+    left half (PL table + PL score, packed against the centre) and a right
+    half (Champ score + Champ table, packed against the centre) that are
+    each exactly half the row's width (.row-half below) — that's what keeps
+    the seam between the two sides sitting exactly on the page's centre
+    line no matter how much wider one league's boxes are than the other's;
+    any extra width just extends the outer edge instead of dragging the
+    seam off-centre."""
+    has_scores = bool(data.get("participants"))
+    pl_score = f"<div>{league_scores_table_html('premier_league')}</div>" if has_scores else ""
+    ch_score = f"<div>{league_scores_table_html('championship')}</div>" if has_scores else ""
     return f"""
-    <div class="grid-2">
-      <div>{league_scores_table_html('premier_league')}</div>
-      <div>{league_scores_table_html('championship')}</div>
-    </div>
-    """
-
-
-def actual_tables_row_html():
-    """Both leagues' actual standings tables side by side, same layout as the
-    scores row above it."""
-    return f"""
-    <div class="grid-2">
-      <div>{league_table_html('premier_league')}</div>
-      <div>{league_table_html('championship')}</div>
+    <div class="tree-row">
+      <div class="row-half row-half-left">
+        <div>{league_table_html('premier_league')}</div>
+        {pl_score}
+      </div>
+      <div class="row-half row-half-right">
+        {ch_score}
+        <div>{league_table_html('championship')}</div>
+      </div>
     </div>
     """
 
@@ -593,10 +597,26 @@ html_out = f"""<!DOCTYPE html>
     border: 1px solid var(--border); border-radius: 8px;
     font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;
   }}
-  .grid-2 {{ display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }}
-  @media (max-width: 760px) {{ .grid-2 {{ grid-template-columns: 1fr; }} }}
-  /* Same width as one column of .grid-2 below it, centered with an equal gap
-     on both sides rather than stretching edge-to-edge. */
+  /* One row: PL table, PL scores | Championship scores, Championship table.
+     .row-half-left and .row-half-right are flex:1 1 0 — i.e. FORCED to
+     exactly equal widths (half the row each) — so the seam between them
+     always sits dead-centre on the page, whatever the two leagues' actual
+     table/scores boxes measure (team names differ in length, so the two
+     sides are rarely the same width). Each half then packs its own two
+     boxes against that centre seam (justify-content below) and lets any
+     leftover width spill to the OUTER edge instead, which is what gives
+     the row its overhang past the narrower leaderboard above — the
+     "Christmas tree" silhouette — while keeping perfect symmetry. */
+  .tree-row {{ display: flex; width: 100%; }}
+  .row-half {{ flex: 1 1 0; display: flex; align-items: flex-start; gap: 20px; min-width: 0; }}
+  .row-half-left {{ justify-content: flex-end; padding-right: 10px; }}
+  .row-half-right {{ justify-content: flex-start; padding-left: 10px; }}
+  @media (max-width: 760px) {{
+    .tree-row {{ flex-direction: column; gap: 20px; }}
+    .row-half {{ flex-direction: column; justify-content: flex-start !important; padding: 0; }}
+  }}
+  /* Centered the same way the row above/below it is, so all tiers share one
+     centre line. */
   .leaderboard-wrap {{ max-width: calc((100% - 20px) / 2); margin: 0 auto; }}
   @media (max-width: 760px) {{ .leaderboard-wrap {{ max-width: 100%; }} }}
   .panel {{
@@ -617,6 +637,11 @@ html_out = f"""<!DOCTYPE html>
     margin-bottom: 12px; gap: 8px; flex-wrap: wrap;
   }}
   .panel-head h2 {{ margin: 0; font-size: 1.05rem; }}
+  /* The scores panels are the ones whose title+badge (in a row) would
+     otherwise be wider than the table itself, forcing the box wider than
+     its content needs. Stacking title above badge here lets the box
+     shrink-wrap to the (narrow) table instead. */
+  .panel-compact .panel-head {{ flex-direction: column; align-items: flex-start; gap: 4px; }}
   .badge {{
     font-size: 0.74rem; font-weight: 600; padding: 4px 10px; border-radius: 999px;
     border: 1px solid var(--border); color: var(--text-secondary);
@@ -626,34 +651,35 @@ html_out = f"""<!DOCTYPE html>
   .badge-live {{ color: var(--good); background: var(--good-bg); border-color: transparent; }}
   .badge-muted {{ color: var(--text-secondary); background: var(--page-plane); }}
   .table-scroll {{ max-height: 520px; overflow-y: auto; }}
-  table.league-table {{ width: 100%; border-collapse: collapse; font-size: 0.9rem; }}
+  /* width:auto (not 100%) lets the table shrink-wrap to its content instead
+     of stretching the Team column to fill the panel — that stretch was what
+     created the big gap between the team name and P/W/D/L/GD/Pts. */
+  table.league-table {{ width: auto; border-collapse: collapse; font-size: 0.9rem; }}
   table.league-table.small {{ font-size: 0.8rem; }}
   table.league-table th {{
     text-align: left; font-size: 0.75rem; color: var(--text-secondary);
-    border-bottom: 1px solid var(--gridline); padding: 6px 8px;
+    border-bottom: 1px solid var(--gridline); padding: 6px 10px;
     position: sticky; top: 0; background: var(--surface-1);
   }}
   table.league-table td {{
-    padding: 6px 8px; border-bottom: 1px solid var(--gridline);
+    padding: 6px 10px; border-bottom: 1px solid var(--gridline);
     font-variant-numeric: tabular-nums;
   }}
   table.league-table td.pos {{ color: var(--text-secondary); width: 2.2em; }}
   table.league-table th.num, table.league-table td.num {{ text-align: right; width: 2.6em; }}
   table.league-table td.pts {{ font-weight: 700; color: var(--text-primary); }}
   table.league-table tr:last-child td {{ border-bottom: none; }}
-  /* table-layout:fixed + widths on the header row (not the body) is what
-     table-layout:fixed actually reads - the name column is left unset so it
-     alone absorbs the remaining width, and the score column is pinned to a
-     narrow width and right-aligned so it hugs the panel's right edge instead
-     of leaving empty space stranded between the two. */
-  table.scores-table {{ width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 0.82rem; }}
+  /* Same shrink-wrap fix as league-table above: width:auto instead of 100%
+     (and auto layout instead of fixed) so the Name column stops absorbing
+     the panel's full width and hugs the score column instead. */
+  table.scores-table {{ width: auto; table-layout: auto; border-collapse: collapse; font-size: 0.82rem; }}
   table.scores-table th {{
     text-align: left; font-size: 0.72rem; color: var(--text-secondary);
     border-bottom: 1px solid var(--gridline); padding: 4px 10px;
   }}
   table.scores-table td {{ padding: 4px 10px; border-bottom: 1px solid var(--gridline); }}
-  table.scores-table th:first-child {{ width: 2.4em; }}
-  table.scores-table th:last-child {{ width: 4.5em; text-align: right; }}
+  table.scores-table th:first-child, table.scores-table td:first-child {{ width: 2.4em; }}
+  table.scores-table th:last-child {{ text-align: right; }}
   table.scores-table tr:last-child td {{ border-bottom: none; }}
   table.scores-table .scores-rank {{ color: var(--text-secondary); width: 2.4em; font-variant-numeric: tabular-nums; }}
   table.scores-table .scores-num {{ text-align: right; font-variant-numeric: tabular-nums; }}
@@ -736,9 +762,7 @@ html_out = f"""<!DOCTYPE html>
     {leaderboard_html()}
   </div>
 
-  {scores_row_html()}
-
-  {actual_tables_row_html()}
+  {tables_and_scores_row_html()}
 
   {predictions_section_html()}
 
