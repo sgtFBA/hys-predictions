@@ -84,6 +84,10 @@
   }
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   @media (max-width: 760px) { .grid-2 { grid-template-columns: 1fr; } }
+  /* Same width as one column of .grid-2 below it, centered with an equal gap
+     on both sides rather than stretching edge-to-edge. */
+  .leaderboard-wrap { max-width: calc((100% - 20px) / 2); margin: 0 auto; }
+  @media (max-width: 760px) { .leaderboard-wrap { max-width: 100%; } }
   .panel {
     background: var(--surface-1); border: 1px solid var(--border);
     border-radius: 10px; padding: 16px; margin-bottom: 20px;
@@ -126,12 +130,13 @@
   table.league-table th.num, table.league-table td.num { text-align: right; width: 2.6em; }
   table.league-table td.pts { font-weight: 700; color: var(--text-primary); }
   table.league-table tr:last-child td { border-bottom: none; }
-  table.scores-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  table.scores-table { width: auto; max-width: 100%; border-collapse: collapse; font-size: 0.82rem; }
   table.scores-table th {
-    text-align: left; font-size: 0.75rem; color: var(--text-secondary);
-    border-bottom: 1px solid var(--gridline); padding: 6px 8px;
+    text-align: left; font-size: 0.72rem; color: var(--text-secondary);
+    border-bottom: 1px solid var(--gridline); padding: 4px 10px;
   }
-  table.scores-table td { padding: 6px 8px; border-bottom: 1px solid var(--gridline); }
+  table.scores-table td { padding: 4px 10px; border-bottom: 1px solid var(--gridline); }
+  table.scores-table th:last-child, table.scores-table td:last-child { padding-right: 4px; }
   table.scores-table tr:last-child td { border-bottom: none; }
   table.scores-table .scores-rank { color: var(--text-secondary); width: 2.2em; font-variant-numeric: tabular-nums; }
   table.scores-table .scores-num { font-variant-numeric: tabular-nums; }
@@ -206,11 +211,12 @@
     <div class="meta-row">
       <span>Season 2026-27</span>
       <span>Results last checked: Tue 08 Sep 2026, 12:06 UTC</span>
-      <span>Dashboard generated: Tue 08 Sep 2026, 21:45 UTC</span>
+      <span>Dashboard generated: Tue 08 Sep 2026, 21:55 UTC</span>
     </div>
   </header>
 
-  
+  <div class="leaderboard-wrap">
+    
     <section class="panel">
       <div class="panel-head">
         <h2>Leaderboard</h2>
@@ -402,6 +408,7 @@
       <p class="empty-state">Not yet rankable — Casey (missing Championship prediction).</p>
     </section>
     
+  </div>
 
   
     <div class="grid-2">
