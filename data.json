@@ -1310,6 +1310,17 @@
         "points": 9
       },
       {
+        "team": "Wolverhampton Wanderers",
+        "played": 5,
+        "won": 2,
+        "drawn": 2,
+        "lost": 1,
+        "gf": 13,
+        "ga": 10,
+        "gd": 3,
+        "points": 8
+      },
+      {
         "team": "Watford",
         "played": 6,
         "won": 2,
@@ -1319,17 +1330,6 @@
         "ga": 7,
         "gd": -1,
         "points": 8
-      },
-      {
-        "team": "Wolverhampton Wanderers",
-        "played": 4,
-        "won": 2,
-        "drawn": 1,
-        "lost": 1,
-        "gf": 11,
-        "ga": 8,
-        "gd": 3,
-        "points": 7
       },
       {
         "team": "Wrexham AFC",
@@ -1343,6 +1343,17 @@
         "points": 7
       },
       {
+        "team": "Birmingham City",
+        "played": 5,
+        "won": 1,
+        "drawn": 4,
+        "lost": 0,
+        "gf": 7,
+        "ga": 6,
+        "gd": 1,
+        "points": 7
+      },
+      {
         "team": "Stoke City",
         "played": 6,
         "won": 2,
@@ -1352,17 +1363,6 @@
         "ga": 10,
         "gd": -1,
         "points": 7
-      },
-      {
-        "team": "Birmingham City",
-        "played": 4,
-        "won": 1,
-        "drawn": 3,
-        "lost": 0,
-        "gf": 5,
-        "ga": 4,
-        "gd": 1,
-        "points": 6
       },
       {
         "team": "Norwich City",
@@ -1465,7 +1465,7 @@
       }
     ]
   },
-  "last_checked": "2026-09-08T22:51:30Z",
+  "last_checked": "2026-09-09T12:18:09Z",
   "notes": [
     "premier_league and championship team lists above are placeholders for the note that team names in current_tables/predictions must match exactly (case-sensitive) the names in leagues.*.teams.",
     "current_tables.<league> is an ordered array (position = index + 1) of objects: {\"team\": <exact team name>, \"played\": int, \"won\": int, \"drawn\": int, \"lost\": int, \"gf\": int, \"ga\": int, \"gd\": int, \"points\": int}. Empty array = season not yet started / no data fetched yet.",
