@@ -1200,17 +1200,6 @@
     ],
     "championship": [
       {
-        "team": "West Bromwich Albion",
-        "played": 6,
-        "won": 4,
-        "drawn": 1,
-        "lost": 1,
-        "gf": 9,
-        "ga": 6,
-        "gd": 3,
-        "points": 13
-      },
-      {
         "team": "Southampton",
         "played": 6,
         "won": 3,
@@ -1244,28 +1233,6 @@
         "points": 11
       },
       {
-        "team": "Queens Park Rangers",
-        "played": 6,
-        "won": 3,
-        "drawn": 2,
-        "lost": 1,
-        "gf": 7,
-        "ga": 4,
-        "gd": 3,
-        "points": 11
-      },
-      {
-        "team": "Charlton Athletic",
-        "played": 6,
-        "won": 3,
-        "drawn": 2,
-        "lost": 1,
-        "gf": 6,
-        "ga": 7,
-        "gd": -1,
-        "points": 11
-      },
-      {
         "team": "Middlesbrough",
         "played": 5,
         "won": 3,
@@ -1273,6 +1240,17 @@
         "lost": 1,
         "gf": 8,
         "ga": 5,
+        "gd": 3,
+        "points": 10
+      },
+      {
+        "team": "Queens Park Rangers",
+        "played": 5,
+        "won": 3,
+        "drawn": 1,
+        "lost": 1,
+        "gf": 7,
+        "ga": 4,
         "gd": 3,
         "points": 10
       },
@@ -1288,6 +1266,28 @@
         "points": 10
       },
       {
+        "team": "West Bromwich Albion",
+        "played": 5,
+        "won": 3,
+        "drawn": 1,
+        "lost": 1,
+        "gf": 8,
+        "ga": 6,
+        "gd": 2,
+        "points": 10
+      },
+      {
+        "team": "Charlton Athletic",
+        "played": 5,
+        "won": 3,
+        "drawn": 1,
+        "lost": 1,
+        "gf": 6,
+        "ga": 7,
+        "gd": -1,
+        "points": 10
+      },
+      {
         "team": "Millwall",
         "played": 5,
         "won": 3,
@@ -1296,17 +1296,6 @@
         "gf": 10,
         "ga": 8,
         "gd": 2,
-        "points": 9
-      },
-      {
-        "team": "Norwich City",
-        "played": 6,
-        "won": 3,
-        "drawn": 0,
-        "lost": 3,
-        "gf": 10,
-        "ga": 9,
-        "gd": 1,
         "points": 9
       },
       {
@@ -1355,13 +1344,13 @@
       },
       {
         "team": "Birmingham City",
-        "played": 6,
+        "played": 5,
         "won": 1,
         "drawn": 4,
-        "lost": 1,
-        "gf": 8,
-        "ga": 8,
-        "gd": 0,
+        "lost": 0,
+        "gf": 7,
+        "ga": 6,
+        "gd": 1,
         "points": 7
       },
       {
@@ -1374,6 +1363,17 @@
         "ga": 10,
         "gd": -1,
         "points": 7
+      },
+      {
+        "team": "Norwich City",
+        "played": 5,
+        "won": 2,
+        "drawn": 0,
+        "lost": 3,
+        "gf": 8,
+        "ga": 8,
+        "gd": 0,
+        "points": 6
       },
       {
         "team": "Portsmouth",
@@ -1420,6 +1420,17 @@
         "points": 4
       },
       {
+        "team": "Derby County",
+        "played": 5,
+        "won": 1,
+        "drawn": 1,
+        "lost": 3,
+        "gf": 5,
+        "ga": 10,
+        "gd": -5,
+        "points": 4
+      },
+      {
         "team": "Bolton Wanderers",
         "played": 6,
         "won": 1,
@@ -1427,17 +1438,6 @@
         "lost": 4,
         "gf": 6,
         "ga": 12,
-        "gd": -6,
-        "points": 4
-      },
-      {
-        "team": "Derby County",
-        "played": 6,
-        "won": 1,
-        "drawn": 1,
-        "lost": 4,
-        "gf": 5,
-        "ga": 11,
         "gd": -6,
         "points": 4
       },
@@ -1465,7 +1465,7 @@
       }
     ]
   },
-  "last_checked": "2026-09-11T12:10:06Z",
+  "last_checked": "2026-09-11T16:23:56Z",
   "notes": [
     "premier_league and championship team lists above are placeholders for the note that team names in current_tables/predictions must match exactly (case-sensitive) the names in leagues.*.teams.",
     "current_tables.<league> is an ordered array (position = index + 1) of objects: {\"team\": <exact team name>, \"played\": int, \"won\": int, \"drawn\": int, \"lost\": int, \"gf\": int, \"ga\": int, \"gd\": int, \"points\": int}. Empty array = season not yet started / no data fetched yet.",
