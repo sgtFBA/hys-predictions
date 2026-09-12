@@ -1001,47 +1001,58 @@
       },
       {
         "team": "Hull City",
-        "played": 3,
+        "played": 4,
         "won": 2,
-        "drawn": 1,
-        "lost": 0,
-        "gf": 3,
-        "ga": 0,
-        "gd": 3,
-        "points": 7
-      },
-      {
-        "team": "Chelsea",
-        "played": 3,
-        "won": 2,
-        "drawn": 0,
-        "lost": 1,
-        "gf": 8,
-        "ga": 7,
-        "gd": 1,
-        "points": 6
-      },
-      {
-        "team": "Brentford",
-        "played": 3,
-        "won": 1,
         "drawn": 2,
         "lost": 0,
         "gf": 5,
         "ga": 2,
         "gd": 3,
-        "points": 5
+        "points": 8
+      },
+      {
+        "team": "Chelsea",
+        "played": 4,
+        "won": 2,
+        "drawn": 1,
+        "lost": 1,
+        "gf": 10,
+        "ga": 9,
+        "gd": 1,
+        "points": 7
+      },
+      {
+        "team": "Brentford",
+        "played": 4,
+        "won": 1,
+        "drawn": 3,
+        "lost": 0,
+        "gf": 7,
+        "ga": 4,
+        "gd": 3,
+        "points": 6
       },
       {
         "team": "Liverpool",
-        "played": 3,
+        "played": 4,
         "won": 1,
-        "drawn": 2,
+        "drawn": 3,
         "lost": 0,
         "gf": 6,
         "ga": 4,
         "gd": 2,
-        "points": 5
+        "points": 6
+      },
+      {
+        "team": "Ipswich Town",
+        "played": 4,
+        "won": 2,
+        "drawn": 0,
+        "lost": 2,
+        "gf": 7,
+        "ga": 10,
+        "gd": -3,
+        "points": 6
       },
       {
         "team": "Newcastle United",
@@ -1074,6 +1085,17 @@
         "gf": 3,
         "ga": 2,
         "gd": 1,
+        "points": 5
+      },
+      {
+        "team": "Nottingham Forest",
+        "played": 4,
+        "won": 1,
+        "drawn": 2,
+        "lost": 1,
+        "gf": 4,
+        "ga": 4,
+        "gd": 0,
         "points": 5
       },
       {
@@ -1110,58 +1132,36 @@
         "points": 4
       },
       {
-        "team": "Crystal Palace",
-        "played": 3,
-        "won": 1,
-        "drawn": 0,
-        "lost": 2,
-        "gf": 4,
-        "ga": 8,
-        "gd": -4,
-        "points": 3
-      },
-      {
-        "team": "Ipswich Town",
-        "played": 3,
-        "won": 1,
-        "drawn": 0,
-        "lost": 2,
-        "gf": 4,
-        "ga": 8,
-        "gd": -4,
-        "points": 3
-      },
-      {
         "team": "AFC Bournemouth",
-        "played": 3,
+        "played": 4,
         "won": 0,
-        "drawn": 2,
+        "drawn": 3,
         "lost": 1,
-        "gf": 4,
-        "ga": 5,
+        "gf": 6,
+        "ga": 7,
         "gd": -1,
-        "points": 2
+        "points": 3
       },
       {
-        "team": "Nottingham Forest",
-        "played": 3,
-        "won": 0,
-        "drawn": 2,
-        "lost": 1,
-        "gf": 2,
-        "ga": 3,
-        "gd": -1,
-        "points": 2
+        "team": "Crystal Palace",
+        "played": 4,
+        "won": 1,
+        "drawn": 0,
+        "lost": 3,
+        "gf": 6,
+        "ga": 11,
+        "gd": -5,
+        "points": 3
       },
       {
-        "team": "Aston Villa",
-        "played": 3,
+        "team": "Fulham",
+        "played": 4,
         "won": 0,
         "drawn": 1,
-        "lost": 2,
-        "gf": 0,
-        "ga": 5,
-        "gd": -5,
+        "lost": 3,
+        "gf": 4,
+        "ga": 7,
+        "gd": -3,
         "points": 1
       },
       {
@@ -1176,15 +1176,15 @@
         "points": 1
       },
       {
-        "team": "Fulham",
-        "played": 3,
+        "team": "Aston Villa",
+        "played": 4,
         "won": 0,
-        "drawn": 0,
+        "drawn": 1,
         "lost": 3,
-        "gf": 4,
+        "gf": 1,
         "ga": 7,
-        "gd": -3,
-        "points": 0
+        "gd": -6,
+        "points": 1
       },
       {
         "team": "Coventry City",
@@ -1211,6 +1211,28 @@
         "points": 14
       },
       {
+        "team": "Southampton",
+        "played": 7,
+        "won": 4,
+        "drawn": 2,
+        "lost": 1,
+        "gf": 18,
+        "ga": 8,
+        "gd": 10,
+        "points": 14
+      },
+      {
+        "team": "Swansea City",
+        "played": 7,
+        "won": 4,
+        "drawn": 2,
+        "lost": 1,
+        "gf": 11,
+        "ga": 5,
+        "gd": 6,
+        "points": 14
+      },
+      {
         "team": "West Bromwich Albion",
         "played": 7,
         "won": 4,
@@ -1220,6 +1242,17 @@
         "ga": 7,
         "gd": 3,
         "points": 14
+      },
+      {
+        "team": "Middlesbrough",
+        "played": 6,
+        "won": 4,
+        "drawn": 1,
+        "lost": 1,
+        "gf": 12,
+        "ga": 8,
+        "gd": 4,
+        "points": 13
       },
       {
         "team": "Queens Park Rangers",
@@ -1233,59 +1266,15 @@
         "points": 12
       },
       {
-        "team": "Southampton",
-        "played": 6,
-        "won": 3,
-        "drawn": 2,
-        "lost": 1,
-        "gf": 14,
-        "ga": 7,
-        "gd": 7,
-        "points": 11
-      },
-      {
-        "team": "Swansea City",
-        "played": 6,
-        "won": 3,
-        "drawn": 2,
-        "lost": 1,
-        "gf": 8,
-        "ga": 4,
-        "gd": 4,
-        "points": 11
-      },
-      {
         "team": "Charlton Athletic",
-        "played": 6,
+        "played": 7,
         "won": 3,
-        "drawn": 2,
+        "drawn": 3,
         "lost": 1,
         "gf": 6,
         "ga": 7,
         "gd": -1,
-        "points": 11
-      },
-      {
-        "team": "Middlesbrough",
-        "played": 5,
-        "won": 3,
-        "drawn": 1,
-        "lost": 1,
-        "gf": 8,
-        "ga": 5,
-        "gd": 3,
-        "points": 10
-      },
-      {
-        "team": "Bristol City",
-        "played": 5,
-        "won": 3,
-        "drawn": 1,
-        "lost": 1,
-        "gf": 9,
-        "ga": 7,
-        "gd": 2,
-        "points": 10
+        "points": 12
       },
       {
         "team": "Birmingham City",
@@ -1299,25 +1288,47 @@
         "points": 10
       },
       {
-        "team": "Millwall",
-        "played": 5,
+        "team": "Stoke City",
+        "played": 7,
         "won": 3,
-        "drawn": 0,
+        "drawn": 1,
+        "lost": 3,
+        "gf": 11,
+        "ga": 11,
+        "gd": 0,
+        "points": 10
+      },
+      {
+        "team": "Bristol City",
+        "played": 6,
+        "won": 3,
+        "drawn": 1,
         "lost": 2,
         "gf": 10,
-        "ga": 8,
-        "gd": 2,
-        "points": 9
+        "ga": 11,
+        "gd": -1,
+        "points": 10
       },
       {
         "team": "Norwich City",
+        "played": 7,
+        "won": 3,
+        "drawn": 0,
+        "lost": 4,
+        "gf": 13,
+        "ga": 13,
+        "gd": 0,
+        "points": 9
+      },
+      {
+        "team": "Millwall",
         "played": 6,
         "won": 3,
         "drawn": 0,
         "lost": 3,
-        "gf": 10,
-        "ga": 9,
-        "gd": 1,
+        "gf": 11,
+        "ga": 11,
+        "gd": 0,
         "points": 9
       },
       {
@@ -1343,24 +1354,46 @@
         "points": 8
       },
       {
-        "team": "Watford",
+        "team": "Blackburn Rovers",
+        "played": 7,
+        "won": 2,
+        "drawn": 2,
+        "lost": 3,
+        "gf": 10,
+        "ga": 10,
+        "gd": 0,
+        "points": 8
+      },
+      {
+        "team": "Lincoln City",
         "played": 6,
         "won": 2,
         "drawn": 2,
         "lost": 2,
-        "gf": 6,
-        "ga": 7,
+        "gf": 5,
+        "ga": 6,
         "gd": -1,
         "points": 8
       },
       {
-        "team": "Stoke City",
+        "team": "Watford",
+        "played": 7,
+        "won": 2,
+        "drawn": 2,
+        "lost": 3,
+        "gf": 7,
+        "ga": 9,
+        "gd": -2,
+        "points": 8
+      },
+      {
+        "team": "Portsmouth",
         "played": 6,
         "won": 2,
         "drawn": 1,
         "lost": 3,
-        "gf": 9,
-        "ga": 10,
+        "gf": 7,
+        "ga": 8,
         "gd": -1,
         "points": 7
       },
@@ -1387,39 +1420,6 @@
         "points": 7
       },
       {
-        "team": "Portsmouth",
-        "played": 5,
-        "won": 2,
-        "drawn": 0,
-        "lost": 3,
-        "gf": 7,
-        "ga": 8,
-        "gd": -1,
-        "points": 6
-      },
-      {
-        "team": "Blackburn Rovers",
-        "played": 6,
-        "won": 1,
-        "drawn": 2,
-        "lost": 3,
-        "gf": 7,
-        "ga": 9,
-        "gd": -2,
-        "points": 5
-      },
-      {
-        "team": "Lincoln City",
-        "played": 5,
-        "won": 1,
-        "drawn": 2,
-        "lost": 2,
-        "gf": 4,
-        "ga": 6,
-        "gd": -2,
-        "points": 5
-      },
-      {
         "team": "Cardiff City",
         "played": 7,
         "won": 0,
@@ -1442,30 +1442,30 @@
         "points": 4
       },
       {
-        "team": "Burnley",
-        "played": 6,
-        "won": 0,
-        "drawn": 3,
-        "lost": 3,
-        "gf": 7,
+        "team": "Preston North End",
+        "played": 7,
+        "won": 1,
+        "drawn": 0,
+        "lost": 6,
+        "gf": 6,
         "ga": 13,
-        "gd": -6,
+        "gd": -7,
         "points": 3
       },
       {
-        "team": "Preston North End",
-        "played": 6,
-        "won": 1,
-        "drawn": 0,
-        "lost": 5,
-        "gf": 6,
-        "ga": 12,
-        "gd": -6,
+        "team": "Burnley",
+        "played": 7,
+        "won": 0,
+        "drawn": 3,
+        "lost": 4,
+        "gf": 8,
+        "ga": 16,
+        "gd": -8,
         "points": 3
       }
     ]
   },
-  "last_checked": "2026-09-12T15:28:17Z",
+  "last_checked": "2026-09-12T18:19:18Z",
   "notes": [
     "premier_league and championship team lists above are placeholders for the note that team names in current_tables/predictions must match exactly (case-sensitive) the names in leagues.*.teams.",
     "current_tables.<league> is an ordered array (position = index + 1) of objects: {\"team\": <exact team name>, \"played\": int, \"won\": int, \"drawn\": int, \"lost\": int, \"gf\": int, \"ga\": int, \"gd\": int, \"points\": int}. Empty array = season not yet started / no data fetched yet.",
