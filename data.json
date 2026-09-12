@@ -978,6 +978,17 @@
   "current_tables": {
     "premier_league": [
       {
+        "team": "Arsenal",
+        "played": 4,
+        "won": 4,
+        "drawn": 0,
+        "lost": 0,
+        "gf": 8,
+        "ga": 1,
+        "gd": 7,
+        "points": 12
+      },
+      {
         "team": "Manchester City",
         "played": 3,
         "won": 3,
@@ -985,17 +996,6 @@
         "lost": 0,
         "gf": 7,
         "ga": 2,
-        "gd": 5,
-        "points": 9
-      },
-      {
-        "team": "Arsenal",
-        "played": 3,
-        "won": 3,
-        "drawn": 0,
-        "lost": 0,
-        "gf": 6,
-        "ga": 1,
         "gd": 5,
         "points": 9
       },
@@ -1044,6 +1044,17 @@
         "points": 6
       },
       {
+        "team": "Everton",
+        "played": 4,
+        "won": 1,
+        "drawn": 3,
+        "lost": 0,
+        "gf": 5,
+        "ga": 3,
+        "gd": 2,
+        "points": 6
+      },
+      {
         "team": "Ipswich Town",
         "played": 4,
         "won": 2,
@@ -1062,17 +1073,6 @@
         "lost": 0,
         "gf": 6,
         "ga": 4,
-        "gd": 2,
-        "points": 5
-      },
-      {
-        "team": "Everton",
-        "played": 3,
-        "won": 1,
-        "drawn": 2,
-        "lost": 0,
-        "gf": 5,
-        "ga": 3,
         "gd": 2,
         "points": 5
       },
@@ -1122,13 +1122,13 @@
       },
       {
         "team": "Sunderland",
-        "played": 3,
+        "played": 4,
         "won": 1,
         "drawn": 1,
-        "lost": 1,
+        "lost": 2,
         "gf": 3,
-        "ga": 3,
-        "gd": 0,
+        "ga": 5,
+        "gd": -2,
         "points": 4
       },
       {
@@ -1154,6 +1154,17 @@
         "points": 3
       },
       {
+        "team": "Tottenham Hotspur",
+        "played": 4,
+        "won": 0,
+        "drawn": 2,
+        "lost": 2,
+        "gf": 0,
+        "ga": 5,
+        "gd": -5,
+        "points": 2
+      },
+      {
         "team": "Fulham",
         "played": 4,
         "won": 0,
@@ -1162,17 +1173,6 @@
         "gf": 4,
         "ga": 7,
         "gd": -3,
-        "points": 1
-      },
-      {
-        "team": "Tottenham Hotspur",
-        "played": 3,
-        "won": 0,
-        "drawn": 1,
-        "lost": 2,
-        "gf": 0,
-        "ga": 5,
-        "gd": -5,
         "points": 1
       },
       {
@@ -1465,7 +1465,7 @@
       }
     ]
   },
-  "last_checked": "2026-09-12T18:19:18Z",
+  "last_checked": "2026-09-12T21:24:34Z",
   "notes": [
     "premier_league and championship team lists above are placeholders for the note that team names in current_tables/predictions must match exactly (case-sensitive) the names in leagues.*.teams.",
     "current_tables.<league> is an ordered array (position = index + 1) of objects: {\"team\": <exact team name>, \"played\": int, \"won\": int, \"drawn\": int, \"lost\": int, \"gf\": int, \"ga\": int, \"gd\": int, \"points\": int}. Empty array = season not yet started / no data fetched yet.",
