@@ -990,14 +990,14 @@
       },
       {
         "team": "Manchester City",
-        "played": 3,
-        "won": 3,
+        "played": 4,
+        "won": 4,
         "drawn": 0,
         "lost": 0,
-        "gf": 7,
+        "gf": 8,
         "ga": 2,
-        "gd": 5,
-        "points": 9
+        "gd": 6,
+        "points": 12
       },
       {
         "team": "Hull City",
@@ -1111,13 +1111,13 @@
       },
       {
         "team": "Manchester United",
-        "played": 3,
+        "played": 4,
         "won": 1,
         "drawn": 1,
-        "lost": 1,
+        "lost": 2,
         "gf": 7,
-        "ga": 6,
-        "gd": 1,
+        "ga": 7,
+        "gd": 0,
         "points": 4
       },
       {
@@ -1465,7 +1465,7 @@
       }
     ]
   },
-  "last_checked": "2026-09-13T16:11:34Z",
+  "last_checked": "2026-09-13T18:46:20Z",
   "notes": [
     "premier_league and championship team lists above are placeholders for the note that team names in current_tables/predictions must match exactly (case-sensitive) the names in leagues.*.teams.",
     "current_tables.<league> is an ordered array (position = index + 1) of objects: {\"team\": <exact team name>, \"played\": int, \"won\": int, \"drawn\": int, \"lost\": int, \"gf\": int, \"ga\": int, \"gd\": int, \"points\": int}. Empty array = season not yet started / no data fetched yet.",
