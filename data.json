@@ -1000,6 +1000,17 @@
         "points": 12
       },
       {
+        "team": "Brentford",
+        "played": 5,
+        "won": 2,
+        "drawn": 3,
+        "lost": 0,
+        "gf": 10,
+        "ga": 4,
+        "gd": 6,
+        "points": 9
+      },
+      {
         "team": "Leeds United",
         "played": 4,
         "won": 2,
@@ -1034,25 +1045,14 @@
       },
       {
         "team": "Chelsea",
-        "played": 4,
+        "played": 5,
         "won": 2,
         "drawn": 1,
-        "lost": 1,
+        "lost": 2,
         "gf": 10,
-        "ga": 9,
-        "gd": 1,
+        "ga": 12,
+        "gd": -2,
         "points": 7
-      },
-      {
-        "team": "Brentford",
-        "played": 4,
-        "won": 1,
-        "drawn": 3,
-        "lost": 0,
-        "gf": 7,
-        "ga": 4,
-        "gd": 3,
-        "points": 6
       },
       {
         "team": "Liverpool",
@@ -1255,6 +1255,17 @@
         "points": 14
       },
       {
+        "team": "Bristol City",
+        "played": 8,
+        "won": 4,
+        "drawn": 1,
+        "lost": 3,
+        "gf": 11,
+        "ga": 12,
+        "gd": -1,
+        "points": 13
+      },
+      {
         "team": "Queens Park Rangers",
         "played": 7,
         "won": 3,
@@ -1332,17 +1343,6 @@
         "points": 10
       },
       {
-        "team": "Bristol City",
-        "played": 7,
-        "won": 3,
-        "drawn": 1,
-        "lost": 3,
-        "gf": 10,
-        "ga": 12,
-        "gd": -2,
-        "points": 10
-      },
-      {
         "team": "Norwich City",
         "played": 7,
         "won": 3,
@@ -1377,13 +1377,13 @@
       },
       {
         "team": "Watford",
-        "played": 7,
+        "played": 8,
         "won": 2,
         "drawn": 2,
-        "lost": 3,
+        "lost": 4,
         "gf": 7,
-        "ga": 9,
-        "gd": -2,
+        "ga": 10,
+        "gd": -3,
         "points": 8
       },
       {
@@ -1465,7 +1465,7 @@
       }
     ]
   },
-  "last_checked": "2026-09-18T19:33:25Z",
+  "last_checked": "2026-09-18T22:32:07Z",
   "notes": [
     "premier_league and championship team lists above are placeholders for the note that team names in current_tables/predictions must match exactly (case-sensitive) the names in leagues.*.teams.",
     "current_tables.<league> is an ordered array (position = index + 1) of objects: {\"team\": <exact team name>, \"played\": int, \"won\": int, \"drawn\": int, \"lost\": int, \"gf\": int, \"ga\": int, \"gd\": int, \"points\": int}. Empty array = season not yet started / no data fetched yet.",
