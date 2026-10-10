@@ -990,14 +990,14 @@
       },
       {
         "team": "Arsenal",
-        "played": 5,
-        "won": 4,
+        "played": 6,
+        "won": 5,
         "drawn": 0,
         "lost": 1,
-        "gf": 8,
-        "ga": 4,
-        "gd": 4,
-        "points": 12
+        "gf": 10,
+        "ga": 5,
+        "gd": 5,
+        "points": 15
       },
       {
         "team": "Brighton & Hove Albion",
@@ -1023,13 +1023,13 @@
       },
       {
         "team": "Leeds United",
-        "played": 5,
+        "played": 6,
         "won": 2,
         "drawn": 3,
-        "lost": 0,
-        "gf": 7,
-        "ga": 3,
-        "gd": 4,
+        "lost": 1,
+        "gf": 8,
+        "ga": 5,
+        "gd": 3,
         "points": 9
       },
       {
@@ -1201,14 +1201,14 @@
     "championship": [
       {
         "team": "Swansea City",
-        "played": 8,
-        "won": 5,
+        "played": 9,
+        "won": 6,
         "drawn": 2,
         "lost": 1,
-        "gf": 13,
-        "ga": 6,
-        "gd": 7,
-        "points": 17
+        "gf": 15,
+        "ga": 7,
+        "gd": 8,
+        "points": 20
       },
       {
         "team": "West Ham United",
@@ -1266,14 +1266,36 @@
         "points": 14
       },
       {
+        "team": "Birmingham City",
+        "played": 9,
+        "won": 3,
+        "drawn": 5,
+        "lost": 1,
+        "gf": 13,
+        "ga": 11,
+        "gd": 2,
+        "points": 14
+      },
+      {
         "team": "West Bromwich Albion",
-        "played": 8,
+        "played": 9,
         "won": 4,
         "drawn": 2,
-        "lost": 2,
+        "lost": 3,
         "gf": 10,
-        "ga": 8,
-        "gd": 2,
+        "ga": 9,
+        "gd": 1,
+        "points": 14
+      },
+      {
+        "team": "Bristol City",
+        "played": 9,
+        "won": 4,
+        "drawn": 2,
+        "lost": 3,
+        "gf": 12,
+        "ga": 13,
+        "gd": -1,
         "points": 14
       },
       {
@@ -1288,37 +1310,15 @@
         "points": 13
       },
       {
-        "team": "Bristol City",
-        "played": 8,
-        "won": 4,
-        "drawn": 1,
-        "lost": 3,
-        "gf": 11,
-        "ga": 12,
-        "gd": -1,
-        "points": 13
-      },
-      {
         "team": "Charlton Athletic",
-        "played": 8,
+        "played": 9,
         "won": 3,
-        "drawn": 3,
+        "drawn": 4,
         "lost": 2,
-        "gf": 7,
-        "ga": 10,
-        "gd": -3,
-        "points": 12
-      },
-      {
-        "team": "Birmingham City",
-        "played": 8,
-        "won": 2,
-        "drawn": 5,
-        "lost": 1,
-        "gf": 12,
+        "gf": 8,
         "ga": 11,
-        "gd": 1,
-        "points": 11
+        "gd": -3,
+        "points": 13
       },
       {
         "team": "Millwall",
@@ -1377,13 +1377,13 @@
       },
       {
         "team": "Norwich City",
-        "played": 8,
+        "played": 9,
         "won": 3,
         "drawn": 0,
-        "lost": 5,
-        "gf": 16,
-        "ga": 17,
-        "gd": -1,
+        "lost": 6,
+        "gf": 17,
+        "ga": 19,
+        "gd": -2,
         "points": 9
       },
       {
@@ -1465,7 +1465,7 @@
       }
     ]
   },
-  "last_checked": "2026-10-10T02:19:17Z",
+  "last_checked": "2026-10-10T13:34:40Z",
   "notes": [
     "premier_league and championship team lists above are placeholders for the note that team names in current_tables/predictions must match exactly (case-sensitive) the names in leagues.*.teams.",
     "current_tables.<league> is an ordered array (position = index + 1) of objects: {\"team\": <exact team name>, \"played\": int, \"won\": int, \"drawn\": int, \"lost\": int, \"gf\": int, \"ga\": int, \"gd\": int, \"points\": int}. Empty array = season not yet started / no data fetched yet.",
