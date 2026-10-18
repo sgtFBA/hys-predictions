@@ -989,6 +989,17 @@
         "points": 21
       },
       {
+        "team": "Brighton & Hove Albion",
+        "played": 7,
+        "won": 5,
+        "drawn": 1,
+        "lost": 1,
+        "gf": 23,
+        "ga": 5,
+        "gd": 18,
+        "points": 16
+      },
+      {
         "team": "Arsenal",
         "played": 6,
         "won": 5,
@@ -998,17 +1009,6 @@
         "ga": 5,
         "gd": 5,
         "points": 15
-      },
-      {
-        "team": "Brighton & Hove Albion",
-        "played": 6,
-        "won": 4,
-        "drawn": 1,
-        "lost": 1,
-        "gf": 18,
-        "ga": 5,
-        "gd": 13,
-        "points": 13
       },
       {
         "team": "Chelsea",
@@ -1044,6 +1044,17 @@
         "points": 10
       },
       {
+        "team": "Leeds United",
+        "played": 7,
+        "won": 2,
+        "drawn": 4,
+        "lost": 1,
+        "gf": 9,
+        "ga": 6,
+        "gd": 3,
+        "points": 10
+      },
+      {
         "team": "Everton",
         "played": 7,
         "won": 2,
@@ -1053,17 +1064,6 @@
         "ga": 7,
         "gd": 1,
         "points": 10
-      },
-      {
-        "team": "Leeds United",
-        "played": 6,
-        "won": 2,
-        "drawn": 3,
-        "lost": 1,
-        "gf": 8,
-        "ga": 5,
-        "gd": 3,
-        "points": 9
       },
       {
         "team": "Hull City",
@@ -1110,25 +1110,36 @@
         "points": 8
       },
       {
-        "team": "Crystal Palace",
-        "played": 6,
-        "won": 2,
-        "drawn": 1,
-        "lost": 3,
-        "gf": 9,
-        "ga": 12,
-        "gd": -3,
+        "team": "Manchester United",
+        "played": 7,
+        "won": 1,
+        "drawn": 4,
+        "lost": 2,
+        "gf": 10,
+        "ga": 10,
+        "gd": 0,
         "points": 7
       },
       {
-        "team": "Manchester United",
-        "played": 6,
+        "team": "Crystal Palace",
+        "played": 7,
+        "won": 2,
+        "drawn": 1,
+        "lost": 4,
+        "gf": 9,
+        "ga": 17,
+        "gd": -8,
+        "points": 7
+      },
+      {
+        "team": "AFC Bournemouth",
+        "played": 7,
         "won": 1,
         "drawn": 3,
-        "lost": 2,
+        "lost": 3,
         "gf": 9,
-        "ga": 9,
-        "gd": 0,
+        "ga": 13,
+        "gd": -4,
         "points": 6
       },
       {
@@ -1166,25 +1177,14 @@
       },
       {
         "team": "Sunderland",
-        "played": 6,
+        "played": 7,
         "won": 1,
         "drawn": 1,
-        "lost": 4,
+        "lost": 5,
         "gf": 6,
-        "ga": 12,
-        "gd": -6,
+        "ga": 14,
+        "gd": -8,
         "points": 4
-      },
-      {
-        "team": "AFC Bournemouth",
-        "played": 6,
-        "won": 0,
-        "drawn": 3,
-        "lost": 3,
-        "gf": 7,
-        "ga": 13,
-        "gd": -6,
-        "points": 3
       },
       {
         "team": "Tottenham Hotspur",
@@ -1465,7 +1465,7 @@
       }
     ]
   },
-  "last_checked": "2026-10-18T12:01:28Z",
+  "last_checked": "2026-10-18T15:47:36Z",
   "notes": [
     "premier_league and championship team lists above are placeholders for the note that team names in current_tables/predictions must match exactly (case-sensitive) the names in leagues.*.teams.",
     "current_tables.<league> is an ordered array (position = index + 1) of objects: {\"team\": <exact team name>, \"played\": int, \"won\": int, \"drawn\": int, \"lost\": int, \"gf\": int, \"ga\": int, \"gd\": int, \"points\": int}. Empty array = season not yet started / no data fetched yet.",
