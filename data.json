@@ -1200,6 +1200,17 @@
     ],
     "championship": [
       {
+        "team": "Middlesbrough",
+        "played": 12,
+        "won": 7,
+        "drawn": 4,
+        "lost": 1,
+        "gf": 27,
+        "ga": 17,
+        "gd": 10,
+        "points": 25
+      },
+      {
         "team": "Swansea City",
         "played": 11,
         "won": 7,
@@ -1219,17 +1230,6 @@
         "gf": 30,
         "ga": 12,
         "gd": 18,
-        "points": 22
-      },
-      {
-        "team": "Middlesbrough",
-        "played": 11,
-        "won": 6,
-        "drawn": 4,
-        "lost": 1,
-        "gf": 22,
-        "ga": 16,
-        "gd": 6,
         "points": 22
       },
       {
@@ -1354,17 +1354,6 @@
         "points": 14
       },
       {
-        "team": "Bolton Wanderers",
-        "played": 11,
-        "won": 4,
-        "drawn": 2,
-        "lost": 5,
-        "gf": 15,
-        "ga": 18,
-        "gd": -3,
-        "points": 14
-      },
-      {
         "team": "Bristol City",
         "played": 11,
         "won": 4,
@@ -1384,6 +1373,17 @@
         "gf": 10,
         "ga": 15,
         "gd": -5,
+        "points": 14
+      },
+      {
+        "team": "Bolton Wanderers",
+        "played": 12,
+        "won": 4,
+        "drawn": 2,
+        "lost": 6,
+        "gf": 16,
+        "ga": 23,
+        "gd": -7,
         "points": 14
       },
       {
@@ -1465,7 +1465,7 @@
       }
     ]
   },
-  "last_checked": "2026-10-23T23:50:07Z",
+  "last_checked": "2026-10-24T11:57:34Z",
   "notes": [
     "premier_league and championship team lists above are placeholders for the note that team names in current_tables/predictions must match exactly (case-sensitive) the names in leagues.*.teams.",
     "current_tables.<league> is an ordered array (position = index + 1) of objects: {\"team\": <exact team name>, \"played\": int, \"won\": int, \"drawn\": int, \"lost\": int, \"gf\": int, \"ga\": int, \"gd\": int, \"points\": int}. Empty array = season not yet started / no data fetched yet.",
