@@ -1212,13 +1212,13 @@
       },
       {
         "team": "Swansea City",
-        "played": 12,
+        "played": 11,
         "won": 7,
         "drawn": 2,
-        "lost": 3,
+        "lost": 2,
         "gf": 16,
-        "ga": 13,
-        "gd": 3,
+        "ga": 8,
+        "gd": 8,
         "points": 23
       },
       {
@@ -1244,17 +1244,6 @@
         "points": 21
       },
       {
-        "team": "Wolverhampton Wanderers",
-        "played": 12,
-        "won": 6,
-        "drawn": 3,
-        "lost": 3,
-        "gf": 20,
-        "ga": 16,
-        "gd": 4,
-        "points": 21
-      },
-      {
         "team": "Birmingham City",
         "played": 11,
         "won": 5,
@@ -1263,17 +1252,6 @@
         "gf": 20,
         "ga": 11,
         "gd": 9,
-        "points": 20
-      },
-      {
-        "team": "Queens Park Rangers",
-        "played": 12,
-        "won": 5,
-        "drawn": 5,
-        "lost": 2,
-        "gf": 20,
-        "ga": 12,
-        "gd": 8,
         "points": 20
       },
       {
@@ -1299,26 +1277,37 @@
         "points": 19
       },
       {
-        "team": "Blackburn Rovers",
-        "played": 12,
+        "team": "Wolverhampton Wanderers",
+        "played": 11,
         "won": 5,
         "drawn": 3,
-        "lost": 4,
+        "lost": 3,
         "gf": 19,
         "ga": 16,
         "gd": 3,
         "points": 18
       },
       {
-        "team": "Portsmouth",
-        "played": 12,
-        "won": 5,
+        "team": "Queens Park Rangers",
+        "played": 11,
+        "won": 4,
+        "drawn": 5,
+        "lost": 2,
+        "gf": 15,
+        "ga": 12,
+        "gd": 3,
+        "points": 17
+      },
+      {
+        "team": "Blackburn Rovers",
+        "played": 11,
+        "won": 4,
         "drawn": 3,
         "lost": 4,
-        "gf": 16,
-        "ga": 15,
+        "gf": 17,
+        "ga": 16,
         "gd": 1,
-        "points": 18
+        "points": 15
       },
       {
         "team": "Sheffield United",
@@ -1333,35 +1322,35 @@
       },
       {
         "team": "Millwall",
-        "played": 12,
+        "played": 11,
         "won": 4,
         "drawn": 3,
-        "lost": 5,
-        "gf": 19,
-        "ga": 20,
-        "gd": -1,
+        "lost": 4,
+        "gf": 18,
+        "ga": 18,
+        "gd": 0,
         "points": 15
       },
       {
-        "team": "Lincoln City",
-        "played": 12,
+        "team": "Portsmouth",
+        "played": 11,
         "won": 4,
         "drawn": 3,
-        "lost": 5,
-        "gf": 13,
-        "ga": 20,
-        "gd": -7,
+        "lost": 4,
+        "gf": 14,
+        "ga": 14,
+        "gd": 0,
         "points": 15
       },
       {
         "team": "Wrexham AFC",
-        "played": 12,
+        "played": 11,
         "won": 3,
         "drawn": 5,
-        "lost": 4,
+        "lost": 3,
         "gf": 15,
-        "ga": 18,
-        "gd": -3,
+        "ga": 16,
+        "gd": -1,
         "points": 14
       },
       {
@@ -1398,6 +1387,17 @@
         "points": 14
       },
       {
+        "team": "Lincoln City",
+        "played": 11,
+        "won": 3,
+        "drawn": 3,
+        "lost": 5,
+        "gf": 9,
+        "ga": 19,
+        "gd": -10,
+        "points": 12
+      },
+      {
         "team": "Cardiff City",
         "played": 11,
         "won": 2,
@@ -1410,13 +1410,13 @@
       },
       {
         "team": "Watford",
-        "played": 12,
+        "played": 11,
         "won": 3,
         "drawn": 2,
-        "lost": 7,
+        "lost": 6,
         "gf": 10,
-        "ga": 20,
-        "gd": -10,
+        "ga": 19,
+        "gd": -9,
         "points": 11
       },
       {
@@ -1432,13 +1432,13 @@
       },
       {
         "team": "Burnley",
-        "played": 12,
+        "played": 11,
         "won": 1,
         "drawn": 5,
-        "lost": 6,
-        "gf": 17,
-        "ga": 25,
-        "gd": -8,
+        "lost": 5,
+        "gf": 16,
+        "ga": 21,
+        "gd": -5,
         "points": 8
       },
       {
@@ -1465,7 +1465,7 @@
       }
     ]
   },
-  "last_checked": "2026-10-24T18:45:14Z",
+  "last_checked": "2026-10-24T21:33:46Z",
   "notes": [
     "premier_league and championship team lists above are placeholders for the note that team names in current_tables/predictions must match exactly (case-sensitive) the names in leagues.*.teams.",
     "current_tables.<league> is an ordered array (position = index + 1) of objects: {\"team\": <exact team name>, \"played\": int, \"won\": int, \"drawn\": int, \"lost\": int, \"gf\": int, \"ga\": int, \"gd\": int, \"points\": int}. Empty array = season not yet started / no data fetched yet.",
