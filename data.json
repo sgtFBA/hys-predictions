@@ -1044,6 +1044,17 @@
         "points": 14
       },
       {
+        "team": "Everton",
+        "played": 9,
+        "won": 3,
+        "drawn": 4,
+        "lost": 2,
+        "gf": 9,
+        "ga": 9,
+        "gd": 0,
+        "points": 13
+      },
+      {
         "team": "AFC Bournemouth",
         "played": 9,
         "won": 3,
@@ -1100,13 +1111,13 @@
       },
       {
         "team": "Newcastle United",
-        "played": 8,
+        "played": 9,
         "won": 3,
         "drawn": 2,
-        "lost": 3,
+        "lost": 4,
         "gf": 12,
-        "ga": 14,
-        "gd": -2,
+        "ga": 15,
+        "gd": -3,
         "points": 11
       },
       {
@@ -1119,17 +1130,6 @@
         "ga": 18,
         "gd": -4,
         "points": 11
-      },
-      {
-        "team": "Everton",
-        "played": 8,
-        "won": 2,
-        "drawn": 4,
-        "lost": 2,
-        "gf": 8,
-        "ga": 9,
-        "gd": -1,
-        "points": 10
       },
       {
         "team": "Fulham",
@@ -1465,7 +1465,7 @@
       }
     ]
   },
-  "last_checked": "2026-11-02T21:40:17Z",
+  "last_checked": "2026-11-03T03:26:24Z",
   "notes": [
     "premier_league and championship team lists above are placeholders for the note that team names in current_tables/predictions must match exactly (case-sensitive) the names in leagues.*.teams.",
     "current_tables.<league> is an ordered array (position = index + 1) of objects: {\"team\": <exact team name>, \"played\": int, \"won\": int, \"drawn\": int, \"lost\": int, \"gf\": int, \"ga\": int, \"gd\": int, \"points\": int}. Empty array = season not yet started / no data fetched yet.",
