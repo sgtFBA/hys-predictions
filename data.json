@@ -1022,6 +1022,17 @@
         "points": 16
       },
       {
+        "team": "Everton",
+        "played": 10,
+        "won": 4,
+        "drawn": 4,
+        "lost": 2,
+        "gf": 12,
+        "ga": 10,
+        "gd": 2,
+        "points": 16
+      },
+      {
         "team": "Liverpool",
         "played": 9,
         "won": 4,
@@ -1042,17 +1053,6 @@
         "ga": 9,
         "gd": 7,
         "points": 14
-      },
-      {
-        "team": "Everton",
-        "played": 9,
-        "won": 3,
-        "drawn": 4,
-        "lost": 2,
-        "gf": 9,
-        "ga": 9,
-        "gd": 0,
-        "points": 13
       },
       {
         "team": "AFC Bournemouth",
@@ -1144,13 +1144,13 @@
       },
       {
         "team": "Coventry City",
-        "played": 9,
+        "played": 10,
         "won": 3,
         "drawn": 0,
-        "lost": 6,
-        "gf": 9,
-        "ga": 16,
-        "gd": -7,
+        "lost": 7,
+        "gf": 10,
+        "ga": 19,
+        "gd": -9,
         "points": 9
       },
       {
@@ -1377,13 +1377,13 @@
       },
       {
         "team": "Bolton Wanderers",
-        "played": 14,
+        "played": 15,
         "won": 5,
         "drawn": 2,
-        "lost": 7,
-        "gf": 19,
-        "ga": 26,
-        "gd": -7,
+        "lost": 8,
+        "gf": 20,
+        "ga": 29,
+        "gd": -9,
         "points": 17
       },
       {
@@ -1443,14 +1443,14 @@
       },
       {
         "team": "Derby County",
-        "played": 14,
-        "won": 1,
+        "played": 15,
+        "won": 2,
         "drawn": 4,
         "lost": 9,
-        "gf": 11,
-        "ga": 29,
-        "gd": -18,
-        "points": 7
+        "gf": 14,
+        "ga": 30,
+        "gd": -16,
+        "points": 10
       },
       {
         "team": "Preston North End",
@@ -1465,7 +1465,7 @@
       }
     ]
   },
-  "last_checked": "2026-11-06T19:17:39Z",
+  "last_checked": "2026-11-07T00:03:58Z",
   "notes": [
     "premier_league and championship team lists above are placeholders for the note that team names in current_tables/predictions must match exactly (case-sensitive) the names in leagues.*.teams.",
     "current_tables.<league> is an ordered array (position = index + 1) of objects: {\"team\": <exact team name>, \"played\": int, \"won\": int, \"drawn\": int, \"lost\": int, \"gf\": int, \"ga\": int, \"gd\": int, \"points\": int}. Empty array = season not yet started / no data fetched yet.",
