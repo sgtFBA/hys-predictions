@@ -98,16 +98,74 @@ def normalize_name(raw, alias_map):
     return None
 
 
-def fetch_finished_matches(competition_code):
+def season_start_year(data):
+    """'2026-27' -> 2026. Passing the season explicitly stops the API from
+    silently switching which season it treats as 'current'."""
+    try:
+        return int(str(data.get("season", "")).split("-")[0].split("/")[0])
+    except ValueError:
+        return None
+
+
+def api_get(url):
+    req = urllib.request.Request(url, headers={"X-Auth-Token": TOKEN})
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        return json.loads(resp.read().decode("utf-8"))
+
+
+def fetch_finished_matches(competition_code, season=None):
     """football-data.org's precomputed /standings endpoint lags noticeably for
     lower-profile competitions on the free tier (observed: still showing 0
     games played many hours after full time). Match results themselves are
     recorded promptly, so we pull finished matches and compute the table
     ourselves instead of trusting their standings cache."""
     url = f"https://api.football-data.org/v4/competitions/{competition_code}/matches?status=FINISHED"
-    req = urllib.request.Request(url, headers={"X-Auth-Token": TOKEN})
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        return json.loads(resp.read().decode("utf-8"))
+    if season:
+        url += f"&season={season}"
+    return api_get(url)
+
+
+def fetch_standings_table(competition_code, canonical, alias_map, season=None):
+    """Second opinion: football-data's own precomputed table. Returns
+    (ordered, played_total, problems) in the same shape as compute_table,
+    or None if it can't be used."""
+    url = f"https://api.football-data.org/v4/competitions/{competition_code}/standings"
+    if season:
+        url += f"?season={season}"
+    payload = api_get(url)
+    total = next((s for s in payload.get("standings", []) if s.get("type") == "TOTAL"), None)
+    if not total:
+        return None
+    ordered, problems = [], []
+    for row in total.get("table", []):
+        raw = row["team"]["name"]
+        name = normalize_name(raw, alias_map)
+        if name is None or name not in canonical:
+            problems.append(raw)
+            continue
+        ordered.append({
+            "team": name,
+            "played": row.get("playedGames", 0),
+            "won": row.get("won", 0),
+            "drawn": row.get("draw", 0),
+            "lost": row.get("lost", 0),
+            "gf": row.get("goalsFor", 0),
+            "ga": row.get("goalsAgainst", 0),
+            "gd": row.get("goalDifference", 0),
+            "points": row.get("points", 0),
+        })
+    if len(ordered) != len(canonical):
+        problems.append(f"standings had {len(ordered)} usable teams, expected {len(canonical)}")
+    played_total = sum(t["played"] for t in ordered) // 2
+    return ordered, played_total, problems
+
+
+def matches_in_table(table):
+    """How many matches an existing current_tables entry is built from."""
+    try:
+        return sum(int(t.get("played", 0)) for t in table) // 2
+    except (AttributeError, TypeError):
+        return 0
 
 
 def compute_table(matches, canonical, alias_map):
@@ -203,38 +261,63 @@ def main():
         data = json.load(f)
 
     any_auth_error = False
+    season = season_start_year(data)
 
     for league_key, comp_code in COMPETITIONS.items():
         canonical = set(data["leagues"][league_key]["teams"])
         alias_map = build_alias_map(
             CHAMPIONSHIP_NAME_MAP if league_key == "championship" else PREMIER_LEAGUE_NAME_MAP
         )
+        candidates = []  # (played_total, source, ordered)
+
         try:
-            payload = fetch_finished_matches(comp_code)
+            payload = fetch_finished_matches(comp_code, season)
+            ordered, played_total, problems = compute_table(payload.get("matches", []), canonical, alias_map)
+            if problems:
+                print(f"WARNING: {league_key} matches: unrecognized team name(s) {sorted(set(problems))}", file=sys.stderr)
+            elif played_total:
+                candidates.append((played_total, "matches", ordered))
         except urllib.error.HTTPError as e:
             if e.code in (401, 403):
                 print(f"AUTH ERROR fetching {league_key}: HTTP {e.code} - check FOOTBALL_DATA_TOKEN", file=sys.stderr)
                 any_auth_error = True
             else:
-                print(f"WARNING: HTTP {e.code} fetching {league_key} matches, leaving as-is", file=sys.stderr)
-            continue
+                print(f"WARNING: HTTP {e.code} fetching {league_key} matches", file=sys.stderr)
         except Exception as e:
-            print(f"WARNING: failed to fetch {league_key} matches ({e}), leaving as-is", file=sys.stderr)
+            print(f"WARNING: failed to fetch {league_key} matches ({e})", file=sys.stderr)
+
+        try:
+            result = fetch_standings_table(comp_code, canonical, alias_map, season)
+            if result:
+                ordered, played_total, problems = result
+                if problems:
+                    print(f"WARNING: {league_key} standings unusable: {problems}", file=sys.stderr)
+                elif played_total:
+                    candidates.append((played_total, "standings", ordered))
+        except Exception as e:
+            print(f"WARNING: failed to fetch {league_key} standings ({e})", file=sys.stderr)
+
+        if not candidates:
+            print(f"{league_key}: no usable data this run, leaving current_tables as-is")
             continue
 
-        matches = payload.get("matches", [])
-        ordered, played_total, problems = compute_table(matches, canonical, alias_map)
+        for total, source, _ in candidates:
+            print(f"{league_key}: {source} source has {total} finished matches")
+        best_total, best_source, best_ordered = max(candidates, key=lambda c: c[0])
 
-        if played_total == 0:
-            print(f"{league_key}: season not started (0 finished matches), leaving current_tables as-is")
+        # Matches never un-finish. If the API now returns fewer than we
+        # already have, its feed has gone patchy (this happened 17 Nov 2026
+        # for the Championship: 180 -> 6). Keep the table we have.
+        # NB: at the start of a new season, clear current_tables in data.json
+        # so this check starts from zero.
+        existing_total = matches_in_table(data["current_tables"].get(league_key) or [])
+        if best_total < existing_total:
+            print(f"WARNING: {league_key}: API only has {best_total} finished matches but current table "
+                  f"has {existing_total} - API feed looks incomplete, keeping existing table", file=sys.stderr)
             continue
 
-        if problems:
-            print(f"WARNING: {league_key} unrecognized team name(s) {sorted(set(problems))} - leaving current_tables as-is", file=sys.stderr)
-            continue
-
-        data["current_tables"][league_key] = ordered
-        print(f"{league_key}: updated current_tables ({played_total} finished matches)")
+        data["current_tables"][league_key] = best_ordered
+        print(f"{league_key}: updated current_tables from {best_source} ({best_total} finished matches)")
 
     data["last_checked"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
